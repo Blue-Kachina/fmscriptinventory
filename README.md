@@ -127,12 +127,38 @@ Each option is classified by where it appears in the printed output:
 | `dialog` | Only accessible via a dialog; not shown in the printed script |
 | `hidden-or-dialog-only` | Never shown in the printed script |
 
+## Requirements
+
+- Python 3.10+
+- [`pdfplumber`](https://github.com/jsvine/pdfplumber) — PDF text extraction
+- [`python-slugify`](https://github.com/un33k/python-slugify) — generates `stepKey` slugs from step names
+
+Install dependencies:
+
+```sh
+pip install pdfplumber python-slugify
+```
+
+## Usage
+
+1. Place the two input files in `to_analyze/` (see **Inputs** above).
+2. Run the script:
+
+```sh
+python3 analyze.py
+```
+
+Output is written to `output/inventory.json`. The script prints a summary to stdout showing step counts, confidence distribution, any low-confidence matches, and any XML steps that had no printed counterpart.
+
 ## Project Structure
 
 ```
 to_analyze/
   script.xml        # fmxmlsnippet clipboard export of the source script
   script.pdf        # printed script PDF from FileMaker
+output/
+  inventory.json    # generated — step definitions and script instances
 docs/
   planned_shape.md  # full JSON schema specification with examples
+analyze.py          # main script
 ```

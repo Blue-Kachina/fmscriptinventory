@@ -15,7 +15,7 @@
     "printed": {
       "type": "script-print-pdf",
       "file": "to_analyze/script.pdf",
-      "stepCount": 205
+      "stepCount": 204
     }
   },
   "stepDefinitions": [
@@ -24,7 +24,7 @@
       "fmStepId": 1,
       "names": {
         "xml": "Perform Script",
-        "printed": "Perform RAG Action",
+        "printed": "Perform Script",
         "canonical": "Perform Script",
         "aliases": []
       },
@@ -68,11 +68,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Action: Add Data;RAG Data: From Text ]"
+            "value": "[<unknown>]"
           }
         ],
         "observedPrinted": [
-          "Perform RAG Action[Action: Add Data;RAG Data: From Text ]"
+          "Perform Script[<unknown>]"
         ]
       },
       "options": [],
@@ -84,7 +84,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -95,7 +95,7 @@
       "fmStepId": 3,
       "names": {
         "xml": "Save a Copy as XML",
-        "printed": "Save a Copy as Add-on Package",
+        "printed": "Save a Copy as XML",
         "canonical": "Save a Copy as XML",
         "aliases": []
       },
@@ -151,11 +151,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Window name: ; Replace UUIDs: Off ]"
+            "value": "[ Window name: ; Destination file: <unknown> ]"
           }
         ],
         "observedPrinted": [
-          "Save a Copy as Add-on Package[ Window name: ; Replace UUIDs: Off ]"
+          "Save a Copy as XML[ Window name: ; Destination file: <unknown> ]"
         ]
       },
       "options": [
@@ -185,7 +185,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -1647,7 +1647,7 @@
       "fmStepId": 21,
       "names": {
         "xml": "Unsort Records",
-        "printed": "Undo/Redo",
+        "printed": "Unsort Records",
         "canonical": "Unsort Records",
         "aliases": []
       },
@@ -1687,16 +1687,10 @@
           {
             "type": "stepName",
             "value": "Unsort Records"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[Undo]"
           }
         ],
         "observedPrinted": [
-          "Undo/Redo",
-          "[Undo]"
+          "Unsort Records"
         ]
       },
       "options": [],
@@ -1708,7 +1702,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -1854,7 +1848,7 @@
       "fmStepId": 23,
       "names": {
         "xml": "Show All Records",
-        "printed": "Set Zoom Level",
+        "printed": "Show All Records",
         "canonical": "Show All Records",
         "aliases": []
       },
@@ -1894,15 +1888,10 @@
           {
             "type": "stepName",
             "value": "Show All Records"
-          },
-          {
-            "type": "inlineOptions",
-            "brackets": true,
-            "value": "[100%]"
           }
         ],
         "observedPrinted": [
-          "Set Zoom Level[100%]"
+          "Show All Records"
         ]
       },
       "options": [],
@@ -1914,7 +1903,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -2164,7 +2153,7 @@
       "fmStepId": 27,
       "names": {
         "xml": "Show Omitted Only",
-        "printed": "Show Custom Dialog",
+        "printed": "Show Omitted Only",
         "canonical": "Show Omitted Only",
         "aliases": []
       },
@@ -2204,15 +2193,10 @@
           {
             "type": "stepName",
             "value": "Show Omitted Only"
-          },
-          {
-            "type": "inlineOptions",
-            "brackets": true,
-            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Show Custom Dialog[ ]"
+          "Show Omitted Only"
         ]
       },
       "options": [],
@@ -2224,7 +2208,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -2336,7 +2320,7 @@
       "fmStepId": 29,
       "names": {
         "xml": "Show/Hide Toolbars",
-        "printed": "Show/Hide Text Ruler",
+        "printed": "Show/Hide Toolbars",
         "canonical": "Show/Hide Toolbars",
         "aliases": []
       },
@@ -2414,12 +2398,12 @@
           {
             "type": "continuationOptions",
             "brackets": true,
-            "value": "[Show]"
+            "value": "[Include Edit Record Toolbar; Hide]"
           }
         ],
         "observedPrinted": [
-          "Show/Hide Text Ruler",
-          "[Show]"
+          "Show/Hide Toolbars",
+          "[Include Edit Record Toolbar; Hide]"
         ]
       },
       "options": [
@@ -2481,7 +2465,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -2492,7 +2476,7 @@
       "fmStepId": 30,
       "names": {
         "xml": "View As",
-        "printed": "Unsort Records",
+        "printed": "View As",
         "canonical": "View As",
         "aliases": []
       },
@@ -2544,10 +2528,16 @@
           {
             "type": "stepName",
             "value": "View As"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[Cycle]"
           }
         ],
         "observedPrinted": [
-          "Unsort Records"
+          "View As",
+          "[Cycle]"
         ]
       },
       "options": [
@@ -2575,7 +2565,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -3306,7 +3296,7 @@
       "fmStepId": 37,
       "names": {
         "xml": "Save a Copy as",
-        "printed": "Revert Transaction",
+        "printed": "Save a Copy as",
         "canonical": "Save a Copy as",
         "aliases": []
       },
@@ -3395,11 +3385,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[Create folders:Yes]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[copy of current file]"
           }
         ],
         "observedPrinted": [
-          "Revert Transaction[ ]"
+          "Save a Copy as[Create folders:Yes]",
+          "[copy of current file]"
         ]
       },
       "options": [
@@ -3478,7 +3474,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -3555,7 +3551,7 @@
       "fmStepId": 39,
       "names": {
         "xml": "Sort Records",
-        "printed": "Show/Hide Toolbars",
+        "printed": "Sort Records",
         "canonical": "Sort Records",
         "aliases": []
       },
@@ -3620,14 +3616,19 @@
             "value": "Sort Records"
           },
           {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ ]"
+          },
+          {
             "type": "continuationOptions",
             "brackets": true,
-            "value": "[Include Edit Record Toolbar; Hide]"
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Show/Hide Toolbars",
-          "[Include Edit Record Toolbar; Hide]"
+          "Sort Records[ ]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -3674,7 +3675,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -3685,7 +3686,7 @@
       "fmStepId": 40,
       "names": {
         "xml": "Relookup Field Contents",
-        "printed": "Refresh Window",
+        "printed": "Relookup Field Contents",
         "canonical": "Relookup Field Contents",
         "aliases": []
       },
@@ -3737,10 +3738,21 @@
           {
             "type": "stepName",
             "value": "Relookup Field Contents"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ ]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Refresh Window"
+          "Relookup Field Contents[ ]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -3770,7 +3782,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -3877,7 +3889,7 @@
       "fmStepId": 42,
       "names": {
         "xml": "Print Setup",
-        "printed": "Print",
+        "printed": "Print Setup",
         "canonical": "Print Setup",
         "aliases": []
       },
@@ -3953,7 +3965,7 @@
           }
         ],
         "observedPrinted": [
-          "Print[ ]",
+          "Print Setup[ ]",
           "[No dialog]"
         ]
       },
@@ -4001,7 +4013,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -4012,7 +4024,7 @@
       "fmStepId": 43,
       "names": {
         "xml": "Print",
-        "printed": "Perform SQL Query by Natural Language",
+        "printed": "Print",
         "canonical": "Print",
         "aliases": []
       },
@@ -4079,11 +4091,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
+            "value": "[ ]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Perform SQL Query by Natural Language[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
+          "Print[ ]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -4130,7 +4148,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -4207,7 +4225,7 @@
       "fmStepId": 45,
       "names": {
         "xml": "Undo/Redo",
-        "printed": "Truncate Table",
+        "printed": "Undo/Redo",
         "canonical": "Undo/Redo",
         "aliases": []
       },
@@ -4261,13 +4279,14 @@
             "value": "Undo/Redo"
           },
           {
-            "type": "inlineOptions",
+            "type": "continuationOptions",
             "brackets": true,
-            "value": "[Table: <Current Table>]"
+            "value": "[Undo]"
           }
         ],
         "observedPrinted": [
-          "Truncate Table[Table: <Current Table>]"
+          "Undo/Redo",
+          "[Undo]"
         ]
       },
       "options": [
@@ -4295,7 +4314,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -4790,7 +4809,7 @@
       "fmStepId": 50,
       "names": {
         "xml": "Select All",
-        "printed": "Scroll Window",
+        "printed": "Select All",
         "canonical": "Select All",
         "aliases": []
       },
@@ -4830,16 +4849,10 @@
           {
             "type": "stepName",
             "value": "Select All"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[Home]"
           }
         ],
         "observedPrinted": [
-          "Scroll Window",
-          "[Home]"
+          "Select All"
         ]
       },
       "options": [],
@@ -4851,7 +4864,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -4862,7 +4875,7 @@
       "fmStepId": 51,
       "names": {
         "xml": "Revert Record/Request",
-        "printed": "Reset Account Password",
+        "printed": "Revert Record/Request",
         "canonical": "Revert Record/Request",
         "aliases": []
       },
@@ -4916,13 +4929,14 @@
             "value": "Revert Record/Request"
           },
           {
-            "type": "inlineOptions",
+            "type": "continuationOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Reset Account Password[ ]"
+          "Revert Record/Request",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -4952,7 +4966,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -5153,7 +5167,7 @@
       "fmStepId": 57,
       "names": {
         "xml": "Send Event",
-        "printed": "Send DDE Execute",
+        "printed": "Send Event",
         "canonical": "Send Event",
         "aliases": []
       },
@@ -5226,11 +5240,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[Event Class:“”; Event ID:“” ]"
           }
         ],
         "observedPrinted": [
-          "Send DDE Execute[ ]"
+          "Send Event[Event Class:“”; Event ID:“” ]"
         ]
       },
       "options": [
@@ -5268,7 +5282,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -5592,7 +5606,7 @@
       "fmStepId": 63,
       "names": {
         "xml": "Send Mail",
-        "printed": "Send Event",
+        "printed": "Send Mail",
         "canonical": "Send Mail",
         "aliases": []
       },
@@ -5714,11 +5728,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Event Class:“”; Event ID:“” ]"
+            "value": "[Send via E-mail Client]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Send Event[Event Class:“”; Event ID:“” ]"
+          "Send Mail[Send via E-mail Client]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -5829,7 +5849,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -5840,7 +5860,7 @@
       "fmStepId": 64,
       "names": {
         "xml": "Send DDE Execute",
-        "printed": "Select Window",
+        "printed": "Send DDE Execute",
         "canonical": "Send DDE Execute",
         "aliases": []
       },
@@ -5896,11 +5916,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Current Window ]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Select Window[ Current Window ]"
+          "Send DDE Execute[ ]"
         ]
       },
       "options": [
@@ -5928,7 +5948,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -6046,7 +6066,7 @@
       "fmStepId": 66,
       "names": {
         "xml": "Speak",
-        "printed": "Sort Records by Field",
+        "printed": "Speak",
         "canonical": "Speak",
         "aliases": []
       },
@@ -6105,11 +6125,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Ascending]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Sort Records by Field[Ascending]"
+          "Speak[ ]"
         ]
       },
       "options": [
@@ -6132,7 +6152,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -7203,7 +7223,7 @@
       "fmStepId": 76,
       "names": {
         "xml": "Set Field",
-        "printed": "Set Error Logging",
+        "printed": "Set Field",
         "canonical": "Set Field",
         "aliases": []
       },
@@ -7247,11 +7267,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Off ; Custom debug info: ]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Set Error Logging[ Off ; Custom debug info: ]"
+          "Set Field[ ]"
         ]
       },
       "options": [],
@@ -7263,7 +7283,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -7447,7 +7467,7 @@
       "fmStepId": 80,
       "names": {
         "xml": "Refresh Window",
-        "printed": "Refresh Portal",
+        "printed": "Refresh Window",
         "canonical": "Refresh Window",
         "aliases": []
       },
@@ -7510,15 +7530,10 @@
           {
             "type": "stepName",
             "value": "Refresh Window"
-          },
-          {
-            "type": "inlineOptions",
-            "brackets": true,
-            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Refresh Portal[ ]"
+          "Refresh Window"
         ]
       },
       "options": [
@@ -7565,7 +7580,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -7576,7 +7591,7 @@
       "fmStepId": 81,
       "names": {
         "xml": "Scroll Window",
-        "printed": "Save Records as Snapshot Link",
+        "printed": "Scroll Window",
         "canonical": "Scroll Window",
         "aliases": []
       },
@@ -7630,13 +7645,14 @@
             "value": "Scroll Window"
           },
           {
-            "type": "inlineOptions",
+            "type": "continuationOptions",
             "brackets": true,
-            "value": "[Create folders:Yes;Records being browsed ]"
+            "value": "[Home]"
           }
         ],
         "observedPrinted": [
-          "Save Records as Snapshot Link[Create folders:Yes;Records being browsed ]"
+          "Scroll Window",
+          "[Home]"
         ]
       },
       "options": [
@@ -7664,7 +7680,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -7842,7 +7858,7 @@
       "fmStepId": 84,
       "names": {
         "xml": "Set Multi-User",
-        "printed": "Set Layout Object Animation",
+        "printed": "Set Multi-User",
         "canonical": "Set Multi-User",
         "aliases": []
       },
@@ -7902,7 +7918,7 @@
           }
         ],
         "observedPrinted": [
-          "Set Layout Object Animation[On]"
+          "Set Multi-User[On]"
         ]
       },
       "options": [
@@ -7931,7 +7947,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8043,7 +8059,7 @@
       "fmStepId": 86,
       "names": {
         "xml": "Set Error Capture",
-        "printed": "Set Dictionary",
+        "printed": "Set Error Capture",
         "canonical": "Set Error Capture",
         "aliases": []
       },
@@ -8099,17 +8115,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[US English]"
+            "value": "[On]"
           }
         ],
         "observedPrinted": [
-          "Set Dictionary[ ]",
-          "[US English]"
+          "Set Error Capture[On]"
         ]
       },
       "options": [
@@ -8139,7 +8149,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8150,7 +8160,7 @@
       "fmStepId": 87,
       "names": {
         "xml": "Show Custom Dialog",
-        "printed": "Show All Records",
+        "printed": "Show Custom Dialog",
         "canonical": "Show Custom Dialog",
         "aliases": []
       },
@@ -8190,10 +8200,15 @@
           {
             "type": "stepName",
             "value": "Show Custom Dialog"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Show All Records"
+          "Show Custom Dialog[ ]"
         ]
       },
       "options": [],
@@ -8205,7 +8220,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8441,7 +8456,7 @@
       "fmStepId": 91,
       "names": {
         "xml": "Replace Field Contents",
-        "printed": "Rename File",
+        "printed": "Replace Field Contents",
         "canonical": "Replace Field Contents",
         "aliases": []
       },
@@ -8542,11 +8557,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Source file: ; New name: ]"
+            "value": "[ ]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Rename File[ Source file: ; New name: ]"
+          "Replace Field Contents[ ]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -8618,7 +8639,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8629,7 +8650,7 @@
       "fmStepId": 92,
       "names": {
         "xml": "Show/Hide Text Ruler",
-        "printed": "Show/Hide Menubar",
+        "printed": "Show/Hide Text Ruler",
         "canonical": "Show/Hide Text Ruler",
         "aliases": []
       },
@@ -8685,12 +8706,12 @@
           {
             "type": "continuationOptions",
             "brackets": true,
-            "value": "[Hide]"
+            "value": "[Show]"
           }
         ],
         "observedPrinted": [
-          "Show/Hide Menubar",
-          "[Hide]"
+          "Show/Hide Text Ruler",
+          "[Show]"
         ]
       },
       "options": [
@@ -8718,7 +8739,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8795,7 +8816,7 @@
       "fmStepId": 94,
       "names": {
         "xml": "Set Use System Formats",
-        "printed": "Set Session Identifier",
+        "printed": "Set Use System Formats",
         "canonical": "Set Use System Formats",
         "aliases": []
       },
@@ -8851,11 +8872,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[On]"
           }
         ],
         "observedPrinted": [
-          "Set Session Identifier[ ]"
+          "Set Use System Formats[On]"
         ]
       },
       "options": [
@@ -8885,7 +8906,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8896,7 +8917,7 @@
       "fmStepId": 95,
       "names": {
         "xml": "Recover File",
-        "printed": "Read from Data File",
+        "printed": "Recover File",
         "canonical": "Recover File",
         "aliases": []
       },
@@ -8952,11 +8973,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
+            "value": "[ ]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Read from Data File[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
+          "Recover File[ ]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -8986,7 +9013,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -8997,7 +9024,7 @@
       "fmStepId": 96,
       "names": {
         "xml": "Save a Copy as Add-on Package",
-        "printed": "Save a Copy as",
+        "printed": "Save a Copy as Add-on Package",
         "canonical": "Save a Copy as Add-on Package",
         "aliases": []
       },
@@ -9053,17 +9080,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Create folders:Yes]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[copy of current file]"
+            "value": "[ Window name: ; Replace UUIDs: Off ]"
           }
         ],
         "observedPrinted": [
-          "Save a Copy as[Create folders:Yes]",
-          "[copy of current file]"
+          "Save a Copy as Add-on Package[ Window name: ; Replace UUIDs: Off ]"
         ]
       },
       "options": [
@@ -9093,7 +9114,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -9104,7 +9125,7 @@
       "fmStepId": 97,
       "names": {
         "xml": "Set Zoom Level",
-        "printed": "Set Window Title",
+        "printed": "Set Zoom Level",
         "canonical": "Set Zoom Level",
         "aliases": []
       },
@@ -9171,11 +9192,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Current Window ]"
+            "value": "[100%]"
           }
         ],
         "observedPrinted": [
-          "Set Window Title[ Current Window ]"
+          "Set Zoom Level[100%]"
         ]
       },
       "options": [
@@ -9220,7 +9241,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -9884,7 +9905,7 @@
       "fmStepId": 107,
       "names": {
         "xml": "Spelling Options",
-        "printed": "Speak",
+        "printed": "Spelling Options",
         "canonical": "Spelling Options",
         "aliases": []
       },
@@ -9924,15 +9945,10 @@
           {
             "type": "stepName",
             "value": "Spelling Options"
-          },
-          {
-            "type": "inlineOptions",
-            "brackets": true,
-            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Speak[ ]"
+          "Spelling Options"
         ]
       },
       "options": [],
@@ -9944,7 +9960,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -9955,7 +9971,7 @@
       "fmStepId": 108,
       "names": {
         "xml": "Select Dictionaries",
-        "printed": "Select All",
+        "printed": "Select Dictionaries",
         "canonical": "Select Dictionaries",
         "aliases": []
       },
@@ -9998,7 +10014,7 @@
           }
         ],
         "observedPrinted": [
-          "Select All"
+          "Select Dictionaries"
         ]
       },
       "options": [],
@@ -10010,7 +10026,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -10521,7 +10537,7 @@
       "fmStepId": 116,
       "names": {
         "xml": "Set Next Serial Value",
-        "printed": "Set Multi-User",
+        "printed": "Set Next Serial Value",
         "canonical": "Set Next Serial Value",
         "aliases": []
       },
@@ -10565,11 +10581,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[On]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Set Multi-User[On]"
+          "Set Next Serial Value[ ]"
         ]
       },
       "options": [],
@@ -10581,7 +10597,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -11254,7 +11270,7 @@
       "fmStepId": 123,
       "names": {
         "xml": "Select Window",
-        "printed": "Select Dictionaries",
+        "printed": "Select Window",
         "canonical": "Select Window",
         "aliases": []
       },
@@ -11317,10 +11333,15 @@
           {
             "type": "stepName",
             "value": "Select Window"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ Current Window ]"
           }
         ],
         "observedPrinted": [
-          "Select Dictionaries"
+          "Select Window[ Current Window ]"
         ]
       },
       "options": [
@@ -11365,7 +11386,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -11376,7 +11397,7 @@
       "fmStepId": 124,
       "names": {
         "xml": "Set Window Title",
-        "printed": "Set Web Viewer",
+        "printed": "Set Window Title",
         "canonical": "Set Window Title",
         "aliases": []
       },
@@ -11443,11 +11464,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Action: Reset]"
+            "value": "[ Current Window ]"
           }
         ],
         "observedPrinted": [
-          "Set Web Viewer[Action: Reset]"
+          "Set Window Title[ Current Window ]"
         ]
       },
       "options": [
@@ -11492,7 +11513,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -11834,7 +11855,7 @@
       "fmStepId": 128,
       "names": {
         "xml": "Perform Find/Replace",
-        "printed": "Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All",
+        "printed": "Perform Find/Replace",
         "canonical": "Perform Find/Replace",
         "aliases": []
       },
@@ -11912,10 +11933,16 @@
           {
             "type": "stepName",
             "value": "Perform Find/Replace"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All fields ]"
           }
         ],
         "observedPrinted": [
-          "Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All"
+          "Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All",
+          "fields ]"
         ]
       },
       "options": [
@@ -11955,7 +11982,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -12032,7 +12059,7 @@
       "fmStepId": 130,
       "names": {
         "xml": "Set Selection",
-        "printed": "Set Revert Transaction on Error",
+        "printed": "Set Selection",
         "canonical": "Set Selection",
         "aliases": []
       },
@@ -12076,11 +12103,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Off]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Set Revert Transaction on Error[Off]"
+          "Set Selection[ ]"
         ]
       },
       "options": [],
@@ -12092,7 +12119,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -12636,7 +12663,7 @@
       "fmStepId": 136,
       "names": {
         "xml": "Reset Account Password",
-        "printed": "Replace Field Contents",
+        "printed": "Reset Account Password",
         "canonical": "Reset Account Password",
         "aliases": []
       },
@@ -12693,16 +12720,10 @@
             "type": "inlineOptions",
             "brackets": true,
             "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Replace Field Contents[ ]",
-          "[No dialog]"
+          "Reset Account Password[ ]"
         ]
       },
       "options": [
@@ -12731,7 +12752,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -12742,7 +12763,7 @@
       "fmStepId": 138,
       "names": {
         "xml": "Re-Login",
-        "printed": "Print Setup",
+        "printed": "Re-Login",
         "canonical": "Re-Login",
         "aliases": []
       },
@@ -12807,7 +12828,7 @@
           }
         ],
         "observedPrinted": [
-          "Print Setup[ ]",
+          "Re-Login[ ]",
           "[No dialog]"
         ]
       },
@@ -12838,7 +12859,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -13100,7 +13121,7 @@
       "fmStepId": 141,
       "names": {
         "xml": "Set Variable",
-        "printed": "Set Use System Formats",
+        "printed": "Set Variable",
         "canonical": "Set Variable",
         "aliases": []
       },
@@ -13144,11 +13165,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[On]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Set Use System Formats[On]"
+          "Set Variable[ ]"
         ]
       },
       "options": [],
@@ -13160,7 +13181,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -13296,7 +13317,7 @@
       "fmStepId": 143,
       "names": {
         "xml": "Save Records as Excel",
-        "printed": "Save a Copy as XML",
+        "printed": "Save Records as Excel",
         "canonical": "Save Records as Excel",
         "aliases": []
       },
@@ -13418,11 +13439,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Window name: ; Destination file: <unknown> ]"
+            "value": "[Create folders:Yes]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Save a Copy as XML[ Window name: ; Destination file: <unknown> ]"
+          "Save Records as Excel[Create folders:Yes]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -13552,7 +13579,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -13563,7 +13590,7 @@
       "fmStepId": 144,
       "names": {
         "xml": "Save Records as PDF",
-        "printed": "Save Records as JSONL",
+        "printed": "Save Records as PDF",
         "canonical": "Save Records as PDF",
         "aliases": []
       },
@@ -13685,11 +13712,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Format for fine-tuning:Off; Create folders:Off ]"
+            "value": "[Create folders:Yes]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Save Records as JSONL[Format for fine-tuning:Off; Create folders:Off ]"
+          "Save Records as PDF[Create folders:Yes]",
+          "[No dialog]"
         ]
       },
       "options": [
@@ -13816,7 +13849,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -13898,7 +13931,7 @@
       "fmStepId": 146,
       "names": {
         "xml": "Set Web Viewer",
-        "printed": "Set Variable",
+        "printed": "Set Web Viewer",
         "canonical": "Set Web Viewer",
         "aliases": []
       },
@@ -13954,11 +13987,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[Action: Reset]"
           }
         ],
         "observedPrinted": [
-          "Set Variable[ ]"
+          "Set Web Viewer[Action: Reset]"
         ]
       },
       "options": [
@@ -13986,7 +14019,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -13997,7 +14030,7 @@
       "fmStepId": 147,
       "names": {
         "xml": "Set Field By Name",
-        "printed": "Set Field",
+        "printed": "Set Field By Name",
         "canonical": "Set Field By Name",
         "aliases": []
       },
@@ -14045,7 +14078,7 @@
           }
         ],
         "observedPrinted": [
-          "Set Field[ ]"
+          "Set Field By Name[ ]"
         ]
       },
       "options": [],
@@ -14057,7 +14090,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -14205,7 +14238,7 @@
       "fmStepId": 150,
       "names": {
         "xml": "Perform Quick Find",
-        "printed": "Perform JavaScript in Web Viewer",
+        "printed": "Perform Quick Find",
         "canonical": "Perform Quick Find",
         "aliases": []
       },
@@ -14249,11 +14282,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Object Name: <Active Object> ]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Perform JavaScript in Web Viewer[ Object Name: <Active Object> ]"
+          "Perform Quick Find[ ]"
         ]
       },
       "options": [],
@@ -14265,7 +14298,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -14342,7 +14375,7 @@
       "fmStepId": 152,
       "names": {
         "xml": "Save Records as Snapshot Link",
-        "printed": "Save Records as PDF",
+        "printed": "Save Records as Snapshot Link",
         "canonical": "Save Records as Snapshot Link",
         "aliases": []
       },
@@ -14420,17 +14453,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Create folders:Yes]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[Create folders:Yes;Records being browsed ]"
           }
         ],
         "observedPrinted": [
-          "Save Records as PDF[Create folders:Yes]",
-          "[No dialog]"
+          "Save Records as Snapshot Link[Create folders:Yes;Records being browsed ]"
         ]
       },
       "options": [
@@ -14492,7 +14519,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -14503,7 +14530,7 @@
       "fmStepId": 154,
       "names": {
         "xml": "Sort Records by Field",
-        "printed": "Sort Records",
+        "printed": "Sort Records by Field",
         "canonical": "Sort Records by Field",
         "aliases": []
       },
@@ -14559,17 +14586,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[Ascending]"
           }
         ],
         "observedPrinted": [
-          "Sort Records[ ]",
-          "[No dialog]"
+          "Sort Records by Field[Ascending]"
         ]
       },
       "options": [
@@ -14597,7 +14618,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -15341,7 +15362,7 @@
       "fmStepId": 164,
       "names": {
         "xml": "Perform Script on Server",
-        "printed": "Perform Script",
+        "printed": "Perform Script on Server",
         "canonical": "Perform Script on Server",
         "aliases": []
       },
@@ -15398,10 +15419,16 @@
             "type": "inlineOptions",
             "brackets": true,
             "value": "[<unknown>]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[Wait for completion]"
           }
         ],
         "observedPrinted": [
-          "Perform Script[<unknown>]"
+          "Perform Script on Server[<unknown>]",
+          "[Wait for completion]"
         ]
       },
       "options": [
@@ -15431,7 +15458,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -15508,7 +15535,7 @@
       "fmStepId": 166,
       "names": {
         "xml": "Show/Hide Menubar",
-        "printed": "Show Omitted Only",
+        "printed": "Show/Hide Menubar",
         "canonical": "Show/Hide Menubar",
         "aliases": []
       },
@@ -15571,10 +15598,16 @@
           {
             "type": "stepName",
             "value": "Show/Hide Menubar"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[Hide]"
           }
         ],
         "observedPrinted": [
-          "Show Omitted Only"
+          "Show/Hide Menubar",
+          "[Hide]"
         ]
       },
       "options": [
@@ -15619,7 +15652,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -15630,7 +15663,7 @@
       "fmStepId": 167,
       "names": {
         "xml": "Refresh Object",
-        "printed": "Recover File",
+        "printed": "Refresh Object",
         "canonical": "Refresh Object",
         "aliases": []
       },
@@ -15675,16 +15708,10 @@
             "type": "inlineOptions",
             "brackets": true,
             "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
           }
         ],
         "observedPrinted": [
-          "Recover File[ ]",
-          "[No dialog]"
+          "Refresh Object[ ]"
         ]
       },
       "options": [],
@@ -15696,7 +15723,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -15707,7 +15734,7 @@
       "fmStepId": 168,
       "names": {
         "xml": "Set Layout Object Animation",
-        "printed": "Set Field By Name",
+        "printed": "Set Layout Object Animation",
         "canonical": "Set Layout Object Animation",
         "aliases": []
       },
@@ -15763,11 +15790,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[On]"
           }
         ],
         "observedPrinted": [
-          "Set Field By Name[ ]"
+          "Set Layout Object Animation[On]"
         ]
       },
       "options": [
@@ -15797,7 +15824,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -15940,7 +15967,7 @@
       "fmStepId": 175,
       "names": {
         "xml": "Perform JavaScript in Web Viewer",
-        "printed": "fields ]",
+        "printed": "Perform JavaScript in Web Viewer",
         "canonical": "Perform JavaScript in Web Viewer",
         "aliases": []
       },
@@ -15980,10 +16007,15 @@
           {
             "type": "stepName",
             "value": "Perform JavaScript in Web Viewer"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ Object Name: <Active Object> ]"
           }
         ],
         "observedPrinted": [
-          "fields ]"
+          "Perform JavaScript in Web Viewer[ Object Name: <Active Object> ]"
         ]
       },
       "options": [],
@@ -15995,7 +16027,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -16270,7 +16302,7 @@
       "fmStepId": 180,
       "names": {
         "xml": "Refresh Portal",
-        "printed": "Refresh Object",
+        "printed": "Refresh Portal",
         "canonical": "Refresh Portal",
         "aliases": []
       },
@@ -16318,7 +16350,7 @@
           }
         ],
         "observedPrinted": [
-          "Refresh Object[ ]"
+          "Refresh Portal[ ]"
         ]
       },
       "options": [],
@@ -16330,7 +16362,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -16442,7 +16474,7 @@
       "fmStepId": 182,
       "names": {
         "xml": "Truncate Table",
-        "printed": "Trigger Claris Connect Flow",
+        "printed": "Truncate Table",
         "canonical": "Truncate Table",
         "aliases": []
       },
@@ -16512,11 +16544,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
+            "value": "[Table: <Current Table>]"
           }
         ],
         "observedPrinted": [
-          "Trigger Claris Connect Flow[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
+          "Truncate Table[Table: <Current Table>]"
         ]
       },
       "options": [
@@ -16556,7 +16588,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -17145,7 +17177,7 @@
       "fmStepId": 192,
       "names": {
         "xml": "Write to Data File",
-        "printed": "View As",
+        "printed": "Write to Data File",
         "canonical": "Write to Data File",
         "aliases": []
       },
@@ -17210,14 +17242,13 @@
             "value": "Write to Data File"
           },
           {
-            "type": "continuationOptions",
+            "type": "inlineOptions",
             "brackets": true,
-            "value": "[Cycle]"
+            "value": "[ File ID: ; Data source: ; Write as: UTF-16 ; Append line feed: On ]"
           }
         ],
         "observedPrinted": [
-          "View As",
-          "[Cycle]"
+          "Write to Data File[ File ID: ; Data source: ; Write as: UTF-16 ; Append line feed: On ]"
         ]
       },
       "options": [
@@ -17262,7 +17293,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -17273,7 +17304,7 @@
       "fmStepId": 193,
       "names": {
         "xml": "Read from Data File",
-        "printed": "Re-Login",
+        "printed": "Read from Data File",
         "canonical": "Read from Data File",
         "aliases": []
       },
@@ -17329,17 +17360,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
           }
         ],
         "observedPrinted": [
-          "Re-Login[ ]",
-          "[No dialog]"
+          "Read from Data File[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
         ]
       },
       "options": [
@@ -17367,7 +17392,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -17449,7 +17474,7 @@
       "fmStepId": 195,
       "names": {
         "xml": "Set Data File Position",
-        "printed": "Set AI Call Logging",
+        "printed": "Set Data File Position",
         "canonical": "Set Data File Position",
         "aliases": []
       },
@@ -17493,11 +17518,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Off]"
+            "value": "[ File ID: ; New position: ]"
           }
         ],
         "observedPrinted": [
-          "Set AI Call Logging[Off]"
+          "Set Data File Position[ File ID: ; New position: ]"
         ]
       },
       "options": [],
@@ -17509,7 +17534,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -17662,7 +17687,7 @@
       "fmStepId": 199,
       "names": {
         "xml": "Rename File",
-        "printed": "Relookup Field Contents",
+        "printed": "Rename File",
         "canonical": "Rename File",
         "aliases": []
       },
@@ -17706,17 +17731,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[ Source file: ; New name: ]"
           }
         ],
         "observedPrinted": [
-          "Relookup Field Contents[ ]",
-          "[No dialog]"
+          "Rename File[ Source file: ; New name: ]"
         ]
       },
       "options": [],
@@ -17728,7 +17747,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -17739,7 +17758,7 @@
       "fmStepId": 200,
       "names": {
         "xml": "Set Error Logging",
-        "printed": "Set Error Capture",
+        "printed": "Set Error Logging",
         "canonical": "Set Error Logging",
         "aliases": []
       },
@@ -17795,11 +17814,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[On]"
+            "value": "[ Off ; Custom debug info: ]"
           }
         ],
         "observedPrinted": [
-          "Set Error Capture[On]"
+          "Set Error Logging[ Off ; Custom debug info: ]"
         ]
       },
       "options": [
@@ -17829,7 +17848,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -18389,7 +18408,7 @@
       "fmStepId": 207,
       "names": {
         "xml": "Revert Transaction",
-        "printed": "Revert Record/Request",
+        "printed": "Revert Transaction",
         "canonical": "Revert Transaction",
         "aliases": []
       },
@@ -18443,14 +18462,13 @@
             "value": "Revert Transaction"
           },
           {
-            "type": "continuationOptions",
+            "type": "inlineOptions",
             "brackets": true,
-            "value": "[No dialog]"
+            "value": "[ ]"
           }
         ],
         "observedPrinted": [
-          "Revert Record/Request",
-          "[No dialog]"
+          "Revert Transaction[ ]"
         ]
       },
       "options": [
@@ -18480,7 +18498,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -18491,7 +18509,7 @@
       "fmStepId": 208,
       "names": {
         "xml": "Set Session Identifier",
-        "printed": "Set Selection",
+        "printed": "Set Session Identifier",
         "canonical": "Set Session Identifier",
         "aliases": []
       },
@@ -18539,7 +18557,7 @@
           }
         ],
         "observedPrinted": [
-          "Set Selection[ ]"
+          "Set Session Identifier[ ]"
         ]
       },
       "options": [],
@@ -18551,7 +18569,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -18562,7 +18580,7 @@
       "fmStepId": 209,
       "names": {
         "xml": "Set Dictionary",
-        "printed": "Set Data File Position",
+        "printed": "Set Dictionary",
         "canonical": "Set Dictionary",
         "aliases": []
       },
@@ -18618,11 +18636,17 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ File ID: ; New position: ]"
+            "value": "[ ]"
+          },
+          {
+            "type": "continuationOptions",
+            "brackets": true,
+            "value": "[US English]"
           }
         ],
         "observedPrinted": [
-          "Set Data File Position[ File ID: ; New position: ]"
+          "Set Dictionary[ ]",
+          "[US English]"
         ]
       },
       "options": [
@@ -18650,7 +18674,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -18661,7 +18685,7 @@
       "fmStepId": 210,
       "names": {
         "xml": "Perform Script on Server with Callback",
-        "printed": "Perform Script on Server",
+        "printed": "Perform Script on Server with Callback",
         "canonical": "Perform Script on Server with Callback",
         "aliases": []
       },
@@ -18724,17 +18748,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[<unknown>]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[Wait for completion]"
+            "value": "[<unknown>;Callback script: <unknown>;State: “Continue” ]"
           }
         ],
         "observedPrinted": [
-          "Perform Script on Server[<unknown>]",
-          "[Wait for completion]"
+          "Perform Script on Server with Callback[<unknown>;Callback script: <unknown>;State: “Continue” ]"
         ]
       },
       "options": [
@@ -18772,7 +18790,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -18783,7 +18801,7 @@
       "fmStepId": 211,
       "names": {
         "xml": "Trigger Claris Connect Flow",
-        "printed": "Spelling Options",
+        "printed": "Trigger Claris Connect Flow",
         "canonical": "Trigger Claris Connect Flow",
         "aliases": []
       },
@@ -18889,10 +18907,15 @@
           {
             "type": "stepName",
             "value": "Trigger Claris Connect Flow"
+          },
+          {
+            "type": "inlineOptions",
+            "brackets": true,
+            "value": "[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
           }
         ],
         "observedPrinted": [
-          "Spelling Options"
+          "Trigger Claris Connect Flow[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
         ]
       },
       "options": [
@@ -19009,7 +19032,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -19301,7 +19324,7 @@
       "fmStepId": 214,
       "names": {
         "xml": "Perform SQL Query by Natural Language",
-        "printed": "Perform Semantic Find",
+        "printed": "Perform SQL Query by Natural Language",
         "canonical": "Perform SQL Query by Natural Language",
         "aliases": []
       },
@@ -19386,11 +19409,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[All records]"
+            "value": "[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
           }
         ],
         "observedPrinted": [
-          "Perform Semantic Find[All records]"
+          "Perform SQL Query by Natural Language[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
         ]
       },
       "options": [
@@ -19459,7 +19482,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -19650,7 +19673,7 @@
       "fmStepId": 217,
       "names": {
         "xml": "Set AI Call Logging",
-        "printed": "Send Mail",
+        "printed": "Set AI Call Logging",
         "canonical": "Set AI Call Logging",
         "aliases": []
       },
@@ -19713,17 +19736,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Send via E-mail Client]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[Off]"
           }
         ],
         "observedPrinted": [
-          "Send Mail[Send via E-mail Client]",
-          "[No dialog]"
+          "Set AI Call Logging[Off]"
         ]
       },
       "options": [
@@ -19763,7 +19780,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -19774,7 +19791,7 @@
       "fmStepId": 218,
       "names": {
         "xml": "Perform Semantic Find",
-        "printed": "Perform Script on Server with Callback",
+        "printed": "Perform Semantic Find",
         "canonical": "Perform Semantic Find",
         "aliases": []
       },
@@ -19826,11 +19843,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[<unknown>;Callback script: <unknown>;State: “Continue” ]"
+            "value": "[All records]"
           }
         ],
         "observedPrinted": [
-          "Perform Script on Server with Callback[<unknown>;Callback script: <unknown>;State: “Continue” ]"
+          "Perform Semantic Find[All records]"
         ]
       },
       "options": [
@@ -19855,7 +19872,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -19866,7 +19883,7 @@
       "fmStepId": 219,
       "names": {
         "xml": "Perform RAG Action",
-        "printed": "Perform Quick Find",
+        "printed": "Perform RAG Action",
         "canonical": "Perform RAG Action",
         "aliases": []
       },
@@ -19918,11 +19935,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[Action: Add Data;RAG Data: From Text ]"
           }
         ],
         "observedPrinted": [
-          "Perform Quick Find[ ]"
+          "Perform RAG Action[Action: Add Data;RAG Data: From Text ]"
         ]
       },
       "options": [
@@ -19947,7 +19964,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -20477,7 +20494,7 @@
       "fmStepId": 223,
       "names": {
         "xml": "Set Revert Transaction on Error",
-        "printed": "Set Next Serial Value",
+        "printed": "Set Revert Transaction on Error",
         "canonical": "Set Revert Transaction on Error",
         "aliases": []
       },
@@ -20533,11 +20550,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[ ]"
+            "value": "[Off]"
           }
         ],
         "observedPrinted": [
-          "Set Next Serial Value[ ]"
+          "Set Revert Transaction on Error[Off]"
         ]
       },
       "options": [
@@ -20567,7 +20584,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -20578,7 +20595,7 @@
       "fmStepId": 225,
       "names": {
         "xml": "Save Records as JSONL",
-        "printed": "Save Records as Excel",
+        "printed": "Save Records as JSONL",
         "canonical": "Save Records as JSONL",
         "aliases": []
       },
@@ -20685,17 +20702,11 @@
           {
             "type": "inlineOptions",
             "brackets": true,
-            "value": "[Create folders:Yes]"
-          },
-          {
-            "type": "continuationOptions",
-            "brackets": true,
-            "value": "[No dialog]"
+            "value": "[Format for fine-tuning:Off; Create folders:Off ]"
           }
         ],
         "observedPrinted": [
-          "Save Records as Excel[Create folders:Yes]",
-          "[No dialog]"
+          "Save Records as JSONL[Format for fine-tuning:Off; Create folders:Off ]"
         ]
       },
       "options": [
@@ -20803,7 +20814,7 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
+        "confidence": 1.0,
         "instanceCount": 1,
         "notes": []
       },
@@ -24115,7 +24126,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"128\" name=\"Perform Find/Replace\"><NoInteract state=\"False\" /><FindReplaceOperation MatchWholeWords=\"False\" MatchCase=\"False\" WithinOptions=\"All\" AcrossOptions=\"All\" direction=\"Forward\" type=\"FindNext\" /></Step>",
         "printedLines": [
-          "Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All"
+          "Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All",
+          "fields ]"
         ]
       },
       "values": {
@@ -24131,10 +24143,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Find/Replace' pdf='Perform Find/Replace[Search operation:Find Next; Search settings:Forward; Search across:All records/requests; Search within:All'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24146,16 +24156,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"175\" name=\"Perform JavaScript in Web Viewer\" />",
         "printedLines": [
-          "fields ]"
+          "Perform JavaScript in Web Viewer[ Object Name: <Active Object> ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform JavaScript in Web Viewer' pdf='fields ]'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24167,16 +24175,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"150\" name=\"Perform Quick Find\" />",
         "printedLines": [
-          "Perform JavaScript in Web Viewer[ Object Name: <Active Object> ]"
+          "Perform Quick Find[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Quick Find' pdf='Perform JavaScript in Web Viewer'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24188,7 +24194,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"219\" name=\"Perform RAG Action\"><RAGSpace><RAGSpaceAction>Add</RAGSpaceAction><DataSource>FromText</DataSource></RAGSpace></Step>",
         "printedLines": [
-          "Perform Quick Find[ ]"
+          "Perform RAG Action[Action: Add Data;RAG Data: From Text ]"
         ]
       },
       "values": {
@@ -24199,10 +24205,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform RAG Action' pdf='Perform Quick Find'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24214,16 +24218,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"1\" name=\"Perform Script\" />",
         "printedLines": [
-          "Perform RAG Action[Action: Add Data;RAG Data: From Text ]"
+          "Perform Script[<unknown>]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Script' pdf='Perform RAG Action'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24235,7 +24237,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"164\" name=\"Perform Script on Server\"><WaitForCompletion state=\"True\" /></Step>",
         "printedLines": [
-          "Perform Script[<unknown>]"
+          "Perform Script on Server[<unknown>]",
+          "[Wait for completion]"
         ]
       },
       "values": {
@@ -24243,10 +24246,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Script on Server' pdf='Perform Script'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24258,8 +24259,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"210\" name=\"Perform Script on Server with Callback\"><CallbackScriptState value=\"Continue\" /><CallbackScript /></Step>",
         "printedLines": [
-          "Perform Script on Server[<unknown>]",
-          "[Wait for completion]"
+          "Perform Script on Server with Callback[<unknown>;Callback script: <unknown>;State: “Continue” ]"
         ]
       },
       "values": {
@@ -24268,10 +24268,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Script on Server with Callback' pdf='Perform Script on Server'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24283,7 +24281,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"218\" name=\"Perform Semantic Find\"><LLMSemanticFind><Query type=\"1\" /><Records type=\"1\" /></LLMSemanticFind></Step>",
         "printedLines": [
-          "Perform Script on Server with Callback[<unknown>;Callback script: <unknown>;State: “Continue” ]"
+          "Perform Semantic Find[All records]"
         ]
       },
       "values": {
@@ -24298,10 +24296,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform Semantic Find' pdf='Perform Script on Server with Callback'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24313,7 +24309,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"214\" name=\"Perform SQL Query by Natural Language\"><Option state=\"False\" /><Stream state=\"False\" /><UniversalPathList type=\"Embedded\" /><PerformSQLQuerybyNaturalLanguage><OptionsSelectionType>By List</OptionsSelectionType><Action>Query</Action><TablesSelectionType>By List</TablesSelectionType><TableAliases /></PerformSQLQuerybyNaturalLanguage></Step>",
         "printedLines": [
-          "Perform Semantic Find[All records]"
+          "Perform SQL Query by Natural Language[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
         ]
       },
       "values": {
@@ -24331,10 +24327,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Perform SQL Query by Natural Language' pdf='Perform Semantic Find'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24346,7 +24340,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"43\" name=\"Print\"><NoInteract state=\"True\" /><Restore state=\"False\" /></Step>",
         "printedLines": [
-          "Perform SQL Query by Natural Language[Options specified: From list;Action: Query;Data Tables: From list; [ ]; Stream:Off ]"
+          "Print[ ]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24355,10 +24350,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Print' pdf='Perform SQL Query by Natural Language'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24370,7 +24363,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"42\" name=\"Print Setup\"><NoInteract state=\"True\" /><Restore state=\"False\" /></Step>",
         "printedLines": [
-          "Print[ ]",
+          "Print Setup[ ]",
           "[No dialog]"
         ]
       },
@@ -24380,10 +24373,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Print Setup' pdf='Print'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24395,7 +24386,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"138\" name=\"Re-Login\"><NoInteract state=\"True\" /></Step>",
         "printedLines": [
-          "Print Setup[ ]",
+          "Re-Login[ ]",
           "[No dialog]"
         ]
       },
@@ -24404,10 +24395,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Re-Login' pdf='Print Setup'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24419,8 +24408,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"193\" name=\"Read from Data File\"><DataSourceType value=\"3\" /></Step>",
         "printedLines": [
-          "Re-Login[ ]",
-          "[No dialog]"
+          "Read from Data File[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
         ]
       },
       "values": {
@@ -24428,10 +24416,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Read from Data File' pdf='Re-Login'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24443,7 +24429,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"95\" name=\"Recover File\"><NoInteract state=\"True\" /></Step>",
         "printedLines": [
-          "Read from Data File[ File ID: ; Amount (bytes): ; Target: ; Read as: Bytes ]"
+          "Recover File[ ]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24451,10 +24438,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Recover File' pdf='Read from Data File'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24466,17 +24451,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"167\" name=\"Refresh Object\" />",
         "printedLines": [
-          "Recover File[ ]",
-          "[No dialog]"
+          "Refresh Object[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Refresh Object' pdf='Recover File'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24488,16 +24470,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"180\" name=\"Refresh Portal\" />",
         "printedLines": [
-          "Refresh Object[ ]"
+          "Refresh Portal[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Refresh Portal' pdf='Refresh Object'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24509,7 +24489,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"80\" name=\"Refresh Window\"><Option state=\"False\" /><FlushSQLData state=\"False\" /></Step>",
         "printedLines": [
-          "Refresh Portal[ ]"
+          "Refresh Window"
         ]
       },
       "values": {
@@ -24518,10 +24498,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Refresh Window' pdf='Refresh Portal'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24533,7 +24511,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"40\" name=\"Relookup Field Contents\"><NoInteract state=\"True\" /></Step>",
         "printedLines": [
-          "Refresh Window"
+          "Relookup Field Contents[ ]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24541,10 +24520,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Relookup Field Contents' pdf='Refresh Window'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24556,17 +24533,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"199\" name=\"Rename File\" />",
         "printedLines": [
-          "Relookup Field Contents[ ]",
-          "[No dialog]"
+          "Rename File[ Source file: ; New name: ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Rename File' pdf='Relookup Field Contents'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24578,7 +24552,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"91\" name=\"Replace Field Contents\"><NoInteract state=\"True\" /><Restore state=\"False\" /><With value=\"None\" /><SerialNumbers PerformAutoEnter=\"False\" UpdateEntryOptions=\"False\" increment=\"0\" InitialValue=\"\" UseEntryOptions=\"False\" /></Step>",
         "printedLines": [
-          "Rename File[ Source file: ; New name: ]"
+          "Replace Field Contents[ ]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24595,10 +24570,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Replace Field Contents' pdf='Rename File'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24610,8 +24583,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"136\" name=\"Reset Account Password\"><ChgPwdOnNextLogin value=\"False\" /></Step>",
         "printedLines": [
-          "Replace Field Contents[ ]",
-          "[No dialog]"
+          "Reset Account Password[ ]"
         ]
       },
       "values": {
@@ -24619,10 +24591,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Reset Account Password' pdf='Replace Field Contents'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24634,7 +24604,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"51\" name=\"Revert Record/Request\"><NoInteract state=\"True\" /></Step>",
         "printedLines": [
-          "Reset Account Password[ ]"
+          "Revert Record/Request",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24642,10 +24613,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Revert Record/Request' pdf='Reset Account Password'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24657,8 +24626,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"207\" name=\"Revert Transaction\"><Option state=\"False\" /></Step>",
         "printedLines": [
-          "Revert Record/Request",
-          "[No dialog]"
+          "Revert Transaction[ ]"
         ]
       },
       "values": {
@@ -24666,10 +24634,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Revert Transaction' pdf='Revert Record/Request'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24681,7 +24647,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"37\" name=\"Save a Copy as\"><CreateDirectories state=\"True\" /><AutoOpen state=\"False\" /><CreateEmail state=\"False\" /><SaveAsType value=\"Copy\" /></Step>",
         "printedLines": [
-          "Revert Transaction[ ]"
+          "Save a Copy as[Create folders:Yes]",
+          "[copy of current file]"
         ]
       },
       "values": {
@@ -24692,10 +24659,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save a Copy as' pdf='Revert Transaction'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24707,8 +24672,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"96\" name=\"Save a Copy as Add-on Package\"><LinkAvail state=\"False\" /></Step>",
         "printedLines": [
-          "Save a Copy as[Create folders:Yes]",
-          "[copy of current file]"
+          "Save a Copy as Add-on Package[ Window name: ; Replace UUIDs: Off ]"
         ]
       },
       "values": {
@@ -24716,10 +24680,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save a Copy as Add-on Package' pdf='Save a Copy as'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24731,7 +24693,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"3\" name=\"Save a Copy as XML\"><Option state=\"False\" /></Step>",
         "printedLines": [
-          "Save a Copy as Add-on Package[ Window name: ; Replace UUIDs: Off ]"
+          "Save a Copy as XML[ Window name: ; Destination file: <unknown> ]"
         ]
       },
       "values": {
@@ -24739,10 +24701,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save a Copy as XML' pdf='Save a Copy as Add-on Package'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24754,7 +24714,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"143\" name=\"Save Records as Excel\"><NoInteract state=\"True\" /><CreateDirectories state=\"True\" /><Restore state=\"False\" /><AutoOpen state=\"False\" /><CreateEmail state=\"False\" /><SaveType value=\"BrowsedRecords\" /><UseFieldNames state=\"False\" /></Step>",
         "printedLines": [
-          "Save a Copy as XML[ Window name: ; Destination file: <unknown> ]"
+          "Save Records as Excel[Create folders:Yes]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24768,10 +24729,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save Records as Excel' pdf='Save a Copy as XML'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24783,8 +24742,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"225\" name=\"Save Records as JSONL\"><Option state=\"False\" /><CreateDirectories state=\"False\" /><FineTuneFormat state=\"False\" /><AutoOpen state=\"False\" /><CreateEmail state=\"False\" /><SaveAsJSONL /></Step>",
         "printedLines": [
-          "Save Records as Excel[Create folders:Yes]",
-          "[No dialog]"
+          "Save Records as JSONL[Format for fine-tuning:Off; Create folders:Off ]"
         ]
       },
       "values": {
@@ -24797,10 +24755,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save Records as JSONL' pdf='Save Records as Excel'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24812,7 +24768,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"144\" name=\"Save Records as PDF\"><NoInteract state=\"True\" /><Option state=\"False\" /><CreateDirectories state=\"True\" /><Restore state=\"False\" /><AutoOpen state=\"False\" /><CreateEmail state=\"False\" /><PDFOptions source=\"RecordsBeingBrowsed\"><Document><Pages AllPages=\"True\"><NumberFrom><Calculation>1</Calculation></NumberFrom><PageRange><From><Calculation>1</Calculation></From><To><Calculation>1</Calculation></To></PageRange></Pages></Document><Security allowScreenReader=\"True\" enableCopying=\"True\" controlEditing=\"AnyExceptExtractingPages\" controlPrinting=\"HighResolution\" requireControlEditPassword=\"False\" requireOpenPassword=\"False\" /><View magnification=\"100\" pageLayout=\"SinglePage\" show=\"PagesPanelAndPage\" /></PDFOptions></Step>",
         "printedLines": [
-          "Save Records as JSONL[Format for fine-tuning:Off; Create folders:Off ]"
+          "Save Records as PDF[Create folders:Yes]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -24857,10 +24814,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save Records as PDF' pdf='Save Records as JSONL'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24872,8 +24827,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"152\" name=\"Save Records as Snapshot Link\"><CreateDirectories state=\"True\" /><CreateEmail state=\"False\" /><SaveType value=\"BrowsedRecords\" /></Step>",
         "printedLines": [
-          "Save Records as PDF[Create folders:Yes]",
-          "[No dialog]"
+          "Save Records as Snapshot Link[Create folders:Yes;Records being browsed ]"
         ]
       },
       "values": {
@@ -24883,10 +24837,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Save Records as Snapshot Link' pdf='Save Records as PDF'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24898,7 +24850,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"81\" name=\"Scroll Window\"><ScrollOperation value=\"Home\" /></Step>",
         "printedLines": [
-          "Save Records as Snapshot Link[Create folders:Yes;Records being browsed ]"
+          "Scroll Window",
+          "[Home]"
         ]
       },
       "values": {
@@ -24906,10 +24859,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Scroll Window' pdf='Save Records as Snapshot Link'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24921,17 +24872,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"50\" name=\"Select All\" />",
         "printedLines": [
-          "Scroll Window",
-          "[Home]"
+          "Select All"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Select All' pdf='Scroll Window'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24943,16 +24891,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"108\" name=\"Select Dictionaries\" />",
         "printedLines": [
-          "Select All"
+          "Select Dictionaries"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Select Dictionaries' pdf='Select All'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24964,7 +24910,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"123\" name=\"Select Window\"><LimitToWindowsOfCurrentFile state=\"True\" /><Window value=\"Current\" /></Step>",
         "printedLines": [
-          "Select Dictionaries"
+          "Select Window[ Current Window ]"
         ]
       },
       "values": {
@@ -24973,10 +24919,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Select Window' pdf='Select Dictionaries'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -24988,7 +24932,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"64\" name=\"Send DDE Execute\"><ContentType value=\"File\" /></Step>",
         "printedLines": [
-          "Select Window[ Current Window ]"
+          "Send DDE Execute[ ]"
         ]
       },
       "values": {
@@ -24996,10 +24940,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Send DDE Execute' pdf='Select Window'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25011,7 +24953,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"57\" name=\"Send Event\"><ContentType value=\"File\" /><Event CopyResultToClipboard=\"False\" WaitForCompletion=\"False\" BringTargetToForeground=\"False\" /></Step>",
         "printedLines": [
-          "Send DDE Execute[ ]"
+          "Send Event[Event Class:“”; Event ID:“” ]"
         ]
       },
       "values": {
@@ -25024,10 +24966,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Send Event' pdf='Send DDE Execute'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25039,7 +24979,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"63\" name=\"Send Mail\"><NoInteract state=\"True\" /><MultipleEmails state=\"False\" /><SendViaSMTP state=\"False\" /><SendViaOAuthAuthentication state=\"False\" /><SMTPEncryptionType type=\"SMTPEncryptionNone\" /><SMTPAuthenticationType type=\"SMTPAuthenticationNone\" /><OAuthProvider type=\"OAuthProviderGoogle\" /></Step>",
         "printedLines": [
-          "Send Event[Event Class:“”; Event ID:“” ]"
+          "Send Mail[Send via E-mail Client]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -25059,10 +25000,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Send Mail' pdf='Send Event'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25074,8 +25013,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"217\" name=\"Set AI Call Logging\"><Set state=\"False\" /><LLMDebugLog /></Step>",
         "printedLines": [
-          "Send Mail[Send via E-mail Client]",
-          "[No dialog]"
+          "Set AI Call Logging[Off]"
         ]
       },
       "values": {
@@ -25084,10 +25022,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set AI Call Logging' pdf='Send Mail'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25099,16 +25035,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"195\" name=\"Set Data File Position\" />",
         "printedLines": [
-          "Set AI Call Logging[Off]"
+          "Set Data File Position[ File ID: ; New position: ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Data File Position' pdf='Set AI Call Logging'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25120,7 +25054,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"209\" name=\"Set Dictionary\"><MainDictionary value=\"US English\" /></Step>",
         "printedLines": [
-          "Set Data File Position[ File ID: ; New position: ]"
+          "Set Dictionary[ ]",
+          "[US English]"
         ]
       },
       "values": {
@@ -25128,10 +25063,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Dictionary' pdf='Set Data File Position'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25143,8 +25076,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"86\" name=\"Set Error Capture\"><Set state=\"True\" /></Step>",
         "printedLines": [
-          "Set Dictionary[ ]",
-          "[US English]"
+          "Set Error Capture[On]"
         ]
       },
       "values": {
@@ -25152,10 +25084,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Error Capture' pdf='Set Dictionary'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25167,7 +25097,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"200\" name=\"Set Error Logging\"><Option state=\"False\" /></Step>",
         "printedLines": [
-          "Set Error Capture[On]"
+          "Set Error Logging[ Off ; Custom debug info: ]"
         ]
       },
       "values": {
@@ -25175,10 +25105,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Error Logging' pdf='Set Error Capture'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25190,16 +25118,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"76\" name=\"Set Field\" />",
         "printedLines": [
-          "Set Error Logging[ Off ; Custom debug info: ]"
+          "Set Field[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Field' pdf='Set Error Logging'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25211,16 +25137,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"147\" name=\"Set Field By Name\" />",
         "printedLines": [
-          "Set Field[ ]"
+          "Set Field By Name[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Field By Name' pdf='Set Field'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25232,7 +25156,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"168\" name=\"Set Layout Object Animation\"><Set state=\"True\" /></Step>",
         "printedLines": [
-          "Set Field By Name[ ]"
+          "Set Layout Object Animation[On]"
         ]
       },
       "values": {
@@ -25240,10 +25164,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Layout Object Animation' pdf='Set Field By Name'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25255,7 +25177,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"84\" name=\"Set Multi-User\"><MultiUser value=\"True\" /></Step>",
         "printedLines": [
-          "Set Layout Object Animation[On]"
+          "Set Multi-User[On]"
         ]
       },
       "values": {
@@ -25263,10 +25185,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Multi-User' pdf='Set Layout Object Animation'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25278,16 +25198,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"116\" name=\"Set Next Serial Value\" />",
         "printedLines": [
-          "Set Multi-User[On]"
+          "Set Next Serial Value[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Next Serial Value' pdf='Set Multi-User'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25299,7 +25217,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"223\" name=\"Set Revert Transaction on Error\"><Set state=\"False\" /></Step>",
         "printedLines": [
-          "Set Next Serial Value[ ]"
+          "Set Revert Transaction on Error[Off]"
         ]
       },
       "values": {
@@ -25307,10 +25225,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Revert Transaction on Error' pdf='Set Next Serial Value'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25322,16 +25238,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"130\" name=\"Set Selection\" />",
         "printedLines": [
-          "Set Revert Transaction on Error[Off]"
+          "Set Selection[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Selection' pdf='Set Revert Transaction on Error'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25343,16 +25257,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"208\" name=\"Set Session Identifier\" />",
         "printedLines": [
-          "Set Selection[ ]"
+          "Set Session Identifier[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Session Identifier' pdf='Set Selection'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25364,7 +25276,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"94\" name=\"Set Use System Formats\"><Set state=\"True\" /></Step>",
         "printedLines": [
-          "Set Session Identifier[ ]"
+          "Set Use System Formats[On]"
         ]
       },
       "values": {
@@ -25372,10 +25284,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Use System Formats' pdf='Set Session Identifier'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25387,16 +25297,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"141\" name=\"Set Variable\" />",
         "printedLines": [
-          "Set Use System Formats[On]"
+          "Set Variable[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Variable' pdf='Set Use System Formats'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25408,7 +25316,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"146\" name=\"Set Web Viewer\"><Action value=\"Reset\" /></Step>",
         "printedLines": [
-          "Set Variable[ ]"
+          "Set Web Viewer[Action: Reset]"
         ]
       },
       "values": {
@@ -25416,10 +25324,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Web Viewer' pdf='Set Variable'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25431,7 +25337,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"124\" name=\"Set Window Title\"><LimitToWindowsOfCurrentFile state=\"True\" /><Window value=\"Current\" /></Step>",
         "printedLines": [
-          "Set Web Viewer[Action: Reset]"
+          "Set Window Title[ Current Window ]"
         ]
       },
       "values": {
@@ -25440,10 +25346,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Window Title' pdf='Set Web Viewer'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25455,7 +25359,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"97\" name=\"Set Zoom Level\"><Lock state=\"False\" /><Zoom value=\"100\" /></Step>",
         "printedLines": [
-          "Set Window Title[ Current Window ]"
+          "Set Zoom Level[100%]"
         ]
       },
       "values": {
@@ -25464,10 +25368,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Set Zoom Level' pdf='Set Window Title'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25479,16 +25381,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"23\" name=\"Show All Records\" />",
         "printedLines": [
-          "Set Zoom Level[100%]"
+          "Show All Records"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show All Records' pdf='Set Zoom Level'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25500,16 +25400,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"87\" name=\"Show Custom Dialog\" />",
         "printedLines": [
-          "Show All Records"
+          "Show Custom Dialog[ ]"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show Custom Dialog' pdf='Show All Records'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25521,16 +25419,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"27\" name=\"Show Omitted Only\" />",
         "printedLines": [
-          "Show Custom Dialog[ ]"
+          "Show Omitted Only"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show Omitted Only' pdf='Show Custom Dialog'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25542,7 +25438,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"166\" name=\"Show/Hide Menubar\"><Lock state=\"False\" /><ShowHide value=\"Hide\" /></Step>",
         "printedLines": [
-          "Show Omitted Only"
+          "Show/Hide Menubar",
+          "[Hide]"
         ]
       },
       "values": {
@@ -25551,10 +25448,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show/Hide Menubar' pdf='Show Omitted Only'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25566,8 +25461,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"92\" name=\"Show/Hide Text Ruler\"><ShowHide value=\"Show\" /></Step>",
         "printedLines": [
-          "Show/Hide Menubar",
-          "[Hide]"
+          "Show/Hide Text Ruler",
+          "[Show]"
         ]
       },
       "values": {
@@ -25575,10 +25470,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show/Hide Text Ruler' pdf='Show/Hide Menubar'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25590,8 +25483,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"29\" name=\"Show/Hide Toolbars\"><IncludeEditRecordToolbar state=\"True\" /><Lock state=\"False\" /><ShowHide value=\"Hide\" /></Step>",
         "printedLines": [
-          "Show/Hide Text Ruler",
-          "[Show]"
+          "Show/Hide Toolbars",
+          "[Include Edit Record Toolbar; Hide]"
         ]
       },
       "values": {
@@ -25601,10 +25494,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Show/Hide Toolbars' pdf='Show/Hide Text Ruler'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25616,8 +25507,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"39\" name=\"Sort Records\"><NoInteract state=\"True\" /><Restore state=\"False\" /></Step>",
         "printedLines": [
-          "Show/Hide Toolbars",
-          "[Include Edit Record Toolbar; Hide]"
+          "Sort Records[ ]",
+          "[No dialog]"
         ]
       },
       "values": {
@@ -25626,10 +25517,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Sort Records' pdf='Show/Hide Toolbars'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25641,8 +25530,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"154\" name=\"Sort Records by Field\"><SortRecordsByField value=\"SortAscending\" /></Step>",
         "printedLines": [
-          "Sort Records[ ]",
-          "[No dialog]"
+          "Sort Records by Field[Ascending]"
         ]
       },
       "values": {
@@ -25650,10 +25538,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Sort Records by Field' pdf='Sort Records'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25665,7 +25551,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"66\" name=\"Speak\"><SpeechOptions WaitForCompletion=\"False\" VoiceId=\"0\" /></Step>",
         "printedLines": [
-          "Sort Records by Field[Ascending]"
+          "Speak[ ]"
         ]
       },
       "values": {
@@ -25676,10 +25562,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Speak' pdf='Sort Records by Field'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25691,16 +25575,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"107\" name=\"Spelling Options\" />",
         "printedLines": [
-          "Speak[ ]"
+          "Spelling Options"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Spelling Options' pdf='Speak'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25712,7 +25594,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"211\" name=\"Trigger Claris Connect Flow\"><NoInteract state=\"True\" /><DontEncodeURL state=\"False\" /><SelectAll state=\"True\" /><VerifySSLCertificates state=\"False\" /><Flow>&lt;unknown&gt;</Flow><CURLOptions><Calculation>\"--request POST --header \\\"Content-Type: application/json\\\" --data \"</Calculation></CURLOptions><Text>&lt;unknown&gt;</Text></Step>",
         "printedLines": [
-          "Spelling Options"
+          "Trigger Claris Connect Flow[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
         ]
       },
       "values": {
@@ -25728,10 +25610,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Trigger Claris Connect Flow' pdf='Spelling Options'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25743,7 +25623,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"182\" name=\"Truncate Table\"><NoInteract state=\"False\" /><BaseTable id=\"-1\" name=\"&lt;Current Table&gt;\" /></Step>",
         "printedLines": [
-          "Trigger Claris Connect Flow[ Flow: <unknown> ; JSON Data: ; URL: ; AppID:APIKey for Webhooks: ; Target: ]"
+          "Truncate Table[Table: <Current Table>]"
         ]
       },
       "values": {
@@ -25755,10 +25635,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Truncate Table' pdf='Trigger Claris Connect Flow'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25770,7 +25648,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"45\" name=\"Undo/Redo\"><UndoRedo value=\"Undo\" /></Step>",
         "printedLines": [
-          "Truncate Table[Table: <Current Table>]"
+          "Undo/Redo",
+          "[Undo]"
         ]
       },
       "values": {
@@ -25778,10 +25657,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Undo/Redo' pdf='Truncate Table'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25793,17 +25670,14 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"21\" name=\"Unsort Records\" />",
         "printedLines": [
-          "Undo/Redo",
-          "[Undo]"
+          "Unsort Records"
         ]
       },
       "values": {},
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Unsort Records' pdf='Undo/Redo'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25815,7 +25689,8 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"30\" name=\"View As\"><View value=\"Cycle\" /></Step>",
         "printedLines": [
-          "Unsort Records"
+          "View As",
+          "[Cycle]"
         ]
       },
       "values": {
@@ -25823,10 +25698,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='View As' pdf='Unsort Records'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     },
     {
@@ -25838,8 +25711,7 @@
       "raw": {
         "xml": "<Step enable=\"True\" id=\"192\" name=\"Write to Data File\"><AppendLineFeed state=\"True\" /><DataSourceType value=\"1\" /></Step>",
         "printedLines": [
-          "View As",
-          "[Cycle]"
+          "Write to Data File[ File ID: ; Data source: ; Write as: UTF-16 ; Append line feed: On ]"
         ]
       },
       "values": {
@@ -25848,10 +25720,8 @@
       },
       "mapping": {
         "matchStrategy": "sequential-name-normalized",
-        "confidence": 0.5,
-        "notes": [
-          "Name mismatch: xml='Write to Data File' pdf='View As'"
-        ]
+        "confidence": 1.0,
+        "notes": []
       }
     }
   ]

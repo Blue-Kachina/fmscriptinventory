@@ -91,29 +91,61 @@ def parse_pdf_steps(lines):
 
     A step starts on any non-continuation line. Subsequent lines that start
     with '[' belong to that step as continuation option lines.
+
+    Some step-name lines are long enough that FileMaker wraps them across
+    two physical PDF lines. The wrapped fragment does not start with '[', so
+    it looks like a new step to a naive parser. We detect this by tracking
+    whether the open-bracket count exceeds the close-bracket count: if so,
+    we accumulate subsequent lines until the brackets balance.
     """
     steps = []
     current = None
+    wrap_parts: list[str] = []  # non-empty while accumulating a wrapped name line
+
+    def _flush_name(raw_parts: list[str]) -> None:
+        nonlocal current
+        full = " ".join(raw_parts)
+        m = _INLINE_RE.match(full)
+        name_part = m.group(1).strip() if m else full
+        inline_part = m.group(2) if m else None
+        if current is not None:
+            steps.append(current)
+        current = {
+            "index": len(steps),  # fixed up at the end
+            "name": name_part,
+            "inline_options": inline_part,
+            "continuation_lines": [],
+            "raw_lines": list(raw_parts),
+        }
+
     for is_cont, text in lines:
-        if is_cont:
+        if wrap_parts:
+            # Accumulating a step-name line that wrapped across PDF lines.
+            # Every physical line here (continuation or not) is part of the
+            # name/inline-options text until the brackets balance.
+            wrap_parts.append(text)
+            accumulated = " ".join(wrap_parts)
+            if accumulated.count("[") <= accumulated.count("]"):
+                _flush_name(wrap_parts)
+                wrap_parts = []
+        elif is_cont:
             if current is not None:
                 current["continuation_lines"].append(text)
                 current["raw_lines"].append(text)
         else:
-            if current is not None:
-                steps.append(current)
-            m = _INLINE_RE.match(text)
-            name_part = m.group(1).strip() if m else text
-            inline_part = m.group(2) if m else None
-            current = {
-                "index": len(steps),
-                "name": name_part,
-                "inline_options": inline_part,
-                "continuation_lines": [],
-                "raw_lines": [text],
-            }
-    if current is not None:
+            if text.count("[") > text.count("]"):
+                wrap_parts = [text]
+            else:
+                _flush_name([text])
+
+    if wrap_parts:
+        _flush_name(wrap_parts)
+    elif current is not None:
         steps.append(current)
+
+    for i, step in enumerate(steps):
+        step["index"] = i
+
     return steps
 
 # ── Name matching helpers ─────────────────────────────────────────────────────
