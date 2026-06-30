@@ -1,0 +1,3060 @@
+- stepId: 1
+  stepName: Perform Script
+  displayName: null
+  options:
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+  - xmlPath: Script/@name
+    key: script
+    type: reference
+    label: script
+    displayLocation: inline
+- stepId: 3
+  stepName: Save a Copy as XML
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Perform without dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Perform without dialog
+    falseText: null
+- stepId: 4
+  stepName: Go to Next Field
+  displayName: null
+  options: []
+- stepId: 5
+  stepName: Go to Previous Field
+  displayName: null
+  options: []
+- stepId: 6
+  stepName: Go to Layout
+  displayName: null
+  options:
+  - xmlPath: LayoutDestination/@value
+    key: layoutDestination
+    type: enum
+    label: Layout
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: OriginalLayout
+      displayText: original layout
+- stepId: 7
+  stepName: New Record/Request
+  displayName: null
+  options: []
+- stepId: 8
+  stepName: Duplicate Record/Request
+  displayName: null
+  options: []
+- stepId: 9
+  stepName: Delete Record/Request
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 10
+  stepName: Delete All Records
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 11
+  stepName: Insert from Index
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 12
+  stepName: Insert from Last Visited
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 13
+  stepName: Insert Current Date
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 14
+  stepName: Insert Current Time
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 16
+  stepName: Go to Record/Request/Page
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: RowPageLocation/@value
+    key: rowPageLocation
+    type: enum
+    label: Location
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: First
+      displayText: First
+- stepId: 17
+  stepName: Go to Field
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 18
+  stepName: Check Selection
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: Field/@name
+    key: field
+    type: reference
+    label: field
+    displayLocation: inline
+- stepId: 19
+  stepName: Check Record
+  displayName: null
+  options: []
+- stepId: 20
+  stepName: Check Found Set
+  displayName: null
+  options: []
+- stepId: 21
+  stepName: Unsort Records
+  displayName: null
+  options: []
+- stepId: 22
+  stepName: Enter Find Mode
+  displayName: null
+  options:
+  - xmlPath: Pause/@state
+    key: pause
+    type: boolean
+    label: Pause
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Pause
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 23
+  stepName: Show All Records
+  displayName: null
+  options: []
+- stepId: 24
+  stepName: Modify Last Find
+  displayName: null
+  options: []
+- stepId: 25
+  stepName: Omit Record
+  displayName: null
+  options: []
+- stepId: 26
+  stepName: Omit Multiple Records
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 27
+  stepName: Show Omitted Only
+  displayName: null
+  options: []
+- stepId: 28
+  stepName: Perform Find
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 29
+  stepName: Show/Hide Toolbars
+  displayName: null
+  options:
+  - xmlPath: IncludeEditRecordToolbar/@state
+    key: includeEditRecordToolbar
+    type: boolean
+    label: Include Edit Record toolbar
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Include Edit Record toolbar
+    falseText: null
+  - xmlPath: Lock/@state
+    key: lock
+    type: boolean
+    label: Lock
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Lock
+    falseText: null
+  - xmlPath: ShowHide/@value
+    key: showHide
+    type: enum
+    label: Show/Hide
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Hide
+      displayText: Hide
+- stepId: 30
+  stepName: View As
+  displayName: null
+  options:
+  - xmlPath: View/@value
+    key: view
+    type: enum
+    label: View
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Cycle
+      displayText: Cycle
+- stepId: 31
+  stepName: Adjust Window
+  displayName: null
+  options:
+  - xmlPath: WindowState/@value
+    key: windowState
+    type: enum
+    label: Window state
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: ResizeToFit
+      displayText: Resize to Fit
+- stepId: 32
+  stepName: Open Help
+  displayName: null
+  options: []
+- stepId: 33
+  stepName: Open File
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Open hidden
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Open hidden
+    falseText: null
+- stepId: 34
+  stepName: Close File
+  displayName: null
+  options: []
+- stepId: 35
+  stepName: Import Records
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: VerifySSLCertificates/@state
+    key: verifySSLCertificates
+    type: boolean
+    label: Verify SSL Certificates
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: DataSourceType/@value
+    key: dataSourceType
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: File
+      displayText: File
+  - xmlPath: Profile
+    key: profile
+    type: unknown
+    label: profile
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: ImportOptions
+    key: importOptions
+    type: unknown
+    label: importOptions
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Table/@name
+    key: table
+    type: reference
+    label: table
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: TargetFields
+    key: targetFields
+    type: object
+    label: targetFields
+    displayLocation: hidden-or-dialog-only
+- stepId: 36
+  stepName: Export Records
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: Profile
+    key: profile
+    type: unknown
+    label: profile
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: ExportOptions
+    key: exportOptions
+    type: unknown
+    label: exportOptions
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: ExportEntries
+    key: exportEntries
+    type: object
+    label: exportEntries
+    displayLocation: hidden-or-dialog-only
+- stepId: 37
+  stepName: Save a Copy as
+  displayName: null
+  options:
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: SaveAsType/@value
+    key: saveAsType
+    type: enum
+    label: Type
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Copy
+      displayText: copy
+- stepId: 38
+  stepName: Open Manage Database
+  displayName: null
+  options: []
+- stepId: 39
+  stepName: Sort Records
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 40
+  stepName: Relookup Field Contents
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 41
+  stepName: Enter Preview Mode
+  displayName: null
+  options:
+  - xmlPath: Pause/@state
+    key: pause
+    type: boolean
+    label: Pause
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Pause
+    falseText: null
+- stepId: 42
+  stepName: Print Setup
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 43
+  stepName: Print
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 44
+  stepName: Exit Application
+  displayName: null
+  options: []
+- stepId: 45
+  stepName: Undo/Redo
+  displayName: null
+  options:
+  - xmlPath: UndoRedo/@value
+    key: undoRedo
+    type: enum
+    label: Action
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Undo
+      displayText: Undo
+- stepId: 46
+  stepName: Cut
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 47
+  stepName: Copy
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 48
+  stepName: Paste
+  displayName: null
+  options:
+  - xmlPath: NoStyle/@state
+    key: noStyle
+    type: boolean
+    label: No style
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No style
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: LinkAvail/@state
+    key: linkAvail
+    type: boolean
+    label: Link available
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 49
+  stepName: Clear
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: Field/@name
+    key: field
+    type: reference
+    label: field
+    displayLocation: inline
+- stepId: 50
+  stepName: Select All
+  displayName: null
+  options: []
+- stepId: 51
+  stepName: Revert Record/Request
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 55
+  stepName: Enter Browse Mode
+  displayName: null
+  options:
+  - xmlPath: Pause/@state
+    key: pause
+    type: boolean
+    label: Pause
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Pause
+    falseText: null
+- stepId: 56
+  stepName: Insert Picture
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+- stepId: 57
+  stepName: Send Event
+  displayName: null
+  options:
+  - xmlPath: ContentType/@value
+    key: contentType
+    type: enum
+    label: Type
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: File
+      displayText: File
+  - xmlPath: Event
+    key: event
+    type: unknown
+    label: event
+    displayLocation: hidden-or-dialog-only
+- stepId: 60
+  stepName: Insert Current User Name
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 61
+  stepName: Insert Text
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 62
+  stepName: Pause/Resume Script
+  displayName: null
+  options:
+  - xmlPath: PauseTime/@value
+    key: pauseTime
+    type: enum
+    label: Duration
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Indefinitely
+      displayText: Indefinitely
+- stepId: 63
+  stepName: Send Mail
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: MultipleEmails/@state
+    key: multipleEmails
+    type: boolean
+    label: Multiple emails
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SendViaSMTP/@state
+    key: sendViaSMTP
+    type: boolean
+    label: Send via SMTP
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SendViaOAuthAuthentication/@state
+    key: sendViaOAuthAuthentication
+    type: boolean
+    label: Send via OAuth
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SMTPEncryptionType
+    key: sMTPEncryptionType
+    type: unknown
+    label: sMTPEncryptionType
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: SMTPAuthenticationType
+    key: sMTPAuthenticationType
+    type: unknown
+    label: sMTPAuthenticationType
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: OAuthProvider
+    key: oAuthProvider
+    type: unknown
+    label: oAuthProvider
+    displayLocation: hidden-or-dialog-only
+- stepId: 64
+  stepName: Send DDE Execute
+  displayName: null
+  options:
+  - xmlPath: ContentType/@value
+    key: contentType
+    type: enum
+    label: Type
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: File
+      displayText: File
+- stepId: 65
+  stepName: Dial Phone
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: UseDialPreferences/@value
+    key: useDialPreferences
+    type: boolean
+    label: Use dial preferences
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 66
+  stepName: Speak
+  displayName: null
+  options:
+  - xmlPath: SpeechOptions
+    key: speechOptions
+    type: unknown
+    label: speechOptions
+    displayLocation: hidden-or-dialog-only
+- stepId: 67
+  stepName: Perform AppleScript
+  displayName: null
+  options:
+  - xmlPath: ContentType/@value
+    key: contentType
+    type: enum
+    label: Type
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Text
+      displayText: Text
+- stepId: 68
+  stepName: If
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 69
+  stepName: Else
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 70
+  stepName: End If
+  displayName: null
+  options: []
+- stepId: 71
+  stepName: Loop
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: FlushType/@value
+    key: flushType
+    type: enum
+    label: Cache flush
+    displayLocation: hidden-or-dialog-only
+    allowedValues:
+    - xmlValue: Always
+      displayText: Always
+- stepId: 72
+  stepName: Exit Loop If
+  displayName: null
+  options:
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 73
+  stepName: End Loop
+  displayName: null
+  options: []
+- stepId: 74
+  stepName: Go to Related Record
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Show only related records
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Show only related records
+    falseText: null
+  - xmlPath: MatchAllRecords/@state
+    key: matchAllRecords
+    type: boolean
+    label: Match all records in found set
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Match all records in found set
+    falseText: null
+  - xmlPath: ShowInNewWindow/@state
+    key: showInNewWindow
+    type: boolean
+    label: Show in new window
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Show in new window
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: LayoutDestination/@value
+    key: layoutDestination
+    type: enum
+    label: Layout
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: CurrentLayout
+      displayText: current layout
+  - xmlPath: NewWndStyles
+    key: newWndStyles
+    type: unknown
+    label: newWndStyles
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Table/@name
+    key: table
+    type: reference
+    label: table
+    displayLocation: inline
+- stepId: 75
+  stepName: Commit Records/Requests
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Skip data entry validation
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: ESSForceCommit/@state
+    key: eSSForceCommit
+    type: boolean
+    label: Force commit
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 76
+  stepName: Set Field
+  displayName: null
+  options: []
+- stepId: 77
+  stepName: Insert Calculated Result
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+- stepId: 79
+  stepName: Freeze Window
+  displayName: null
+  options: []
+- stepId: 80
+  stepName: Refresh Window
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Flush cached join results
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Flush cached join results
+    falseText: null
+  - xmlPath: FlushSQLData/@state
+    key: flushSQLData
+    type: boolean
+    label: Flush cached SQL data
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Flush cached SQL data
+    falseText: null
+- stepId: 81
+  stepName: Scroll Window
+  displayName: null
+  options:
+  - xmlPath: ScrollOperation/@value
+    key: scrollOperation
+    type: enum
+    label: Scroll
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Home
+      displayText: Home
+- stepId: 82
+  stepName: New File
+  displayName: null
+  options: []
+- stepId: 83
+  stepName: Change Password
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 84
+  stepName: Set Multi-User
+  displayName: null
+  options:
+  - xmlPath: MultiUser/@value
+    key: multiUser
+    type: boolean
+    label: Mode
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: Multi-User
+    falseText: Single User
+- stepId: 85
+  stepName: Allow User Abort
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Allow user abort
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 86
+  stepName: Set Error Capture
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Set error capture
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 87
+  stepName: Show Custom Dialog
+  displayName: null
+  options: []
+- stepId: 88
+  stepName: Open Script Workspace
+  displayName: null
+  options: []
+- stepId: 89
+  stepName: '# (comment)'
+  displayName: null
+  options:
+  - xmlPath: Text/text()
+    key: text
+    type: text
+    label: text
+    displayLocation: inline
+- stepId: 90
+  stepName: Halt Script
+  displayName: null
+  options: []
+- stepId: 91
+  stepName: Replace Field Contents
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: With/@value
+    key: with
+    type: enum
+    label: Replace with
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: None
+      displayText: (none)
+  - xmlPath: SerialNumbers
+    key: serialNumbers
+    type: unknown
+    label: serialNumbers
+    displayLocation: hidden-or-dialog-only
+- stepId: 92
+  stepName: Show/Hide Text Ruler
+  displayName: null
+  options:
+  - xmlPath: ShowHide/@value
+    key: showHide
+    type: enum
+    label: Show/Hide
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Show
+      displayText: Show
+- stepId: 93
+  stepName: Beep
+  displayName: null
+  options: []
+- stepId: 94
+  stepName: Set Use System Formats
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Use system formats
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 95
+  stepName: Recover File
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 96
+  stepName: Save a Copy as Add-on Package
+  displayName: null
+  options:
+  - xmlPath: LinkAvail/@state
+    key: linkAvail
+    type: boolean
+    label: Link available
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 97
+  stepName: Set Zoom Level
+  displayName: null
+  options:
+  - xmlPath: Lock/@state
+    key: lock
+    type: boolean
+    label: Lock
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Lock
+    falseText: null
+  - xmlPath: Zoom/@value
+    key: zoom
+    type: enum
+    label: Zoom level
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: '100'
+      displayText: null
+- stepId: 98
+  stepName: Copy All Records/Requests
+  displayName: null
+  options: []
+- stepId: 99
+  stepName: Go to Portal Row
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: RowPageLocation/@value
+    key: rowPageLocation
+    type: enum
+    label: Location
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: First
+      displayText: First
+- stepId: 101
+  stepName: Copy Record/Request
+  displayName: null
+  options: []
+- stepId: 102
+  stepName: Flush Cache to Disk
+  displayName: null
+  options: []
+- stepId: 103
+  stepName: Exit Script
+  displayName: null
+  options:
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 104
+  stepName: Delete Portal Row
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 105
+  stepName: Open Settings
+  displayName: null
+  options: []
+- stepId: 106
+  stepName: Correct Word
+  displayName: null
+  options: []
+- stepId: 107
+  stepName: Spelling Options
+  displayName: null
+  options: []
+- stepId: 108
+  stepName: Select Dictionaries
+  displayName: null
+  options: []
+- stepId: 109
+  stepName: Edit User Dictionary
+  displayName: null
+  options: []
+- stepId: 111
+  stepName: Open URL
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 112
+  stepName: Open Manage Value Lists
+  displayName: null
+  options: []
+- stepId: 113
+  stepName: Open Sharing
+  displayName: null
+  options: []
+- stepId: 114
+  stepName: Open File Options
+  displayName: null
+  options: []
+- stepId: 115
+  stepName: Allow Formatting Bar
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Allow formatting bar
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 116
+  stepName: Set Next Serial Value
+  displayName: null
+  options: []
+- stepId: 117
+  stepName: Execute SQL
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Profile
+    key: profile
+    type: object
+    label: profile
+    displayLocation: hidden-or-dialog-only
+- stepId: 118
+  stepName: Open Hosts
+  displayName: null
+  options: []
+- stepId: 119
+  stepName: Move/Resize Window
+  displayName: null
+  options:
+  - xmlPath: LimitToWindowsOfCurrentFile/@state
+    key: limitToWindowsOfCurrentFile
+    type: boolean
+    label: Limit to current file
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Window/@value
+    key: window
+    type: enum
+    label: Window
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Current
+      displayText: Current Window
+- stepId: 120
+  stepName: Arrange All Windows
+  displayName: null
+  options:
+  - xmlPath: WindowArrangement/@value
+    key: windowArrangement
+    type: enum
+    label: Arrangement
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: TileHorizontally
+      displayText: Tile Horizontally
+- stepId: 121
+  stepName: Close Window
+  displayName: null
+  options:
+  - xmlPath: LimitToWindowsOfCurrentFile/@state
+    key: limitToWindowsOfCurrentFile
+    type: boolean
+    label: Limit to current file
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Window/@value
+    key: window
+    type: enum
+    label: Window
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: ByName
+      displayText: (name)
+  - xmlPath: Name/Calculation
+    key: name
+    type: calculation
+    label: name
+    displayLocation: inline
+- stepId: 122
+  stepName: New Window
+  displayName: null
+  options:
+  - xmlPath: LayoutDestination/@value
+    key: layoutDestination
+    type: enum
+    label: Layout
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: SelectedLayout
+      displayText: (layout name)
+  - xmlPath: Name/Calculation
+    key: name
+    type: calculation
+    label: name
+    displayLocation: inline
+  - xmlPath: NewWndStyles
+    key: newWndStyles
+    type: unknown
+    label: newWndStyles
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Layout/@name
+    key: layout
+    type: reference
+    label: layout
+    displayLocation: inline
+- stepId: 123
+  stepName: Select Window
+  displayName: null
+  options:
+  - xmlPath: LimitToWindowsOfCurrentFile/@state
+    key: limitToWindowsOfCurrentFile
+    type: boolean
+    label: Limit to current file
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Window/@value
+    key: window
+    type: enum
+    label: Window
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Current
+      displayText: Current Window
+- stepId: 124
+  stepName: Set Window Title
+  displayName: null
+  options:
+  - xmlPath: LimitToWindowsOfCurrentFile/@state
+    key: limitToWindowsOfCurrentFile
+    type: boolean
+    label: Limit to current file
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Window/@value
+    key: window
+    type: enum
+    label: Window
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Current
+      displayText: Current Window
+- stepId: 125
+  stepName: Else If
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 126
+  stepName: Constrain Found Set
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Perform without dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Perform without dialog
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 127
+  stepName: Extend Found Set
+  displayName: null
+  options:
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+- stepId: 128
+  stepName: Perform Find/Replace
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: FindReplaceOperation
+    key: findReplaceOperation
+    type: unknown
+    label: findReplaceOperation
+    displayLocation: hidden-or-dialog-only
+- stepId: 129
+  stepName: Open Find/Replace
+  displayName: null
+  options: []
+- stepId: 130
+  stepName: Set Selection
+  displayName: null
+  options: []
+- stepId: 131
+  stepName: Insert File
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: DialogOptions
+    key: dialogOptions
+    type: object
+    label: dialogOptions
+    displayLocation: hidden-or-dialog-only
+- stepId: 132
+  stepName: Export Field Contents
+  displayName: null
+  options:
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: Field/@name
+    key: field
+    type: reference
+    label: field
+    displayLocation: inline
+- stepId: 133
+  stepName: Open Record/Request
+  displayName: null
+  options: []
+- stepId: 134
+  stepName: Add Account
+  displayName: null
+  options:
+  - xmlPath: ChgPwdOnNextLogin/@value
+    key: chgPwdOnNextLogin
+    type: boolean
+    label: Change password on next login
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+  - xmlPath: AccountName/Calculation
+    key: accountName
+    type: calculation
+    label: accountName
+    displayLocation: inline
+  - xmlPath: Password/Calculation
+    key: password
+    type: calculation
+    label: password
+    displayLocation: inline
+  - xmlPath: PrivilegeSet/@name
+    key: privilegeSet
+    type: reference
+    label: privilegeSet
+    displayLocation: inline
+  - xmlPath: AddAccount
+    key: addAccount
+    type: object
+    label: addAccount
+    displayLocation: hidden-or-dialog-only
+- stepId: 135
+  stepName: Delete Account
+  displayName: null
+  options:
+  - xmlPath: AccountName/Calculation
+    key: accountName
+    type: calculation
+    label: accountName
+    displayLocation: inline
+- stepId: 136
+  stepName: Reset Account Password
+  displayName: null
+  options:
+  - xmlPath: ChgPwdOnNextLogin/@value
+    key: chgPwdOnNextLogin
+    type: boolean
+    label: Change password on next login
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 138
+  stepName: Re-Login
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+- stepId: 139
+  stepName: Convert File
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SkipIndexes/@state
+    key: skipIndexes
+    type: boolean
+    label: Skip indexes
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: VerifySSLCertificates/@state
+    key: verifySSLCertificates
+    type: boolean
+    label: Verify SSL Certificates
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: DataSourceType/@value
+    key: dataSourceType
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: File
+      displayText: File
+  - xmlPath: Profile
+    key: profile
+    type: unknown
+    label: profile
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: ImportOptions
+    key: importOptions
+    type: unknown
+    label: importOptions
+    displayLocation: hidden-or-dialog-only
+- stepId: 140
+  stepName: Open Manage Data Sources
+  displayName: null
+  options: []
+- stepId: 141
+  stepName: Set Variable
+  displayName: null
+  options: []
+- stepId: 142
+  stepName: Install Menu Set
+  displayName: null
+  options:
+  - xmlPath: UseAsFileDefault/@state
+    key: useAsFileDefault
+    type: boolean
+    label: Use as file default
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Use as file default
+    falseText: null
+  - xmlPath: CustomMenuSet/@name
+    key: customMenuSet
+    type: reference
+    label: customMenuSet
+    displayLocation: inline
+- stepId: 143
+  stepName: Save Records as Excel
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: SaveType/@value
+    key: saveType
+    type: enum
+    label: Save
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: BrowsedRecords
+      displayText: Browsed Records
+  - xmlPath: UseFieldNames/@state
+    key: useFieldNames
+    type: boolean
+    label: Use field names
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Use field names
+    falseText: null
+- stepId: 144
+  stepName: Save Records as PDF
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Perform without dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Perform without dialog
+    falseText: null
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Restore
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: PDFOptions
+    key: pDFOptions
+    type: object
+    label: pDFOptions
+    displayLocation: hidden-or-dialog-only
+- stepId: 145
+  stepName: Go to Object
+  displayName: null
+  options: []
+- stepId: 146
+  stepName: Set Web Viewer
+  displayName: null
+  options:
+  - xmlPath: Action/@value
+    key: action
+    type: enum
+    label: Action
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Reset
+      displayText: Reset
+- stepId: 147
+  stepName: Set Field By Name
+  displayName: null
+  options: []
+- stepId: 148
+  stepName: Install OnTimer Script
+  displayName: null
+  options: []
+- stepId: 149
+  stepName: Open Edit Saved Finds
+  displayName: null
+  options: []
+- stepId: 150
+  stepName: Perform Quick Find
+  displayName: null
+  options: []
+- stepId: 151
+  stepName: Open Manage Layouts
+  displayName: null
+  options: []
+- stepId: 152
+  stepName: Save Records as Snapshot Link
+  displayName: null
+  options:
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: SaveType/@value
+    key: saveType
+    type: enum
+    label: Save
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: BrowsedRecords
+      displayText: Browsed Records
+- stepId: 154
+  stepName: Sort Records by Field
+  displayName: null
+  options:
+  - xmlPath: SortRecordsByField/@value
+    key: sortRecordsByField
+    type: enum
+    label: Order
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: SortAscending
+      displayText: Ascending
+- stepId: 155
+  stepName: Find Matching Records
+  displayName: null
+  options:
+  - xmlPath: FindMatchingRecordsByField/@value
+    key: findMatchingRecordsByField
+    type: enum
+    label: Action
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: FindMatchingReplace
+      displayText: Replace
+- stepId: 156
+  stepName: Open Manage Containers
+  displayName: null
+  options: []
+- stepId: 157
+  stepName: Install Plug-In File
+  displayName: null
+  options: []
+- stepId: 158
+  stepName: Insert PDF
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+- stepId: 159
+  stepName: Insert Audio/Video
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+- stepId: 160
+  stepName: Insert from URL
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: continuation
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: DontEncodeURL/@state
+    key: dontEncodeURL
+    type: boolean
+    label: Do not automatically encode URL
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: continuation
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: VerifySSLCertificates/@state
+    key: verifySSLCertificates
+    type: boolean
+    label: Verify SSL Certificates
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 161
+  stepName: Insert from Device
+  displayName: null
+  options:
+  - xmlPath: InsertFrom/@value
+    key: insertFrom
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Camera
+      displayText: Camera
+  - xmlPath: DeviceOptions
+    key: deviceOptions
+    type: object
+    label: deviceOptions
+    displayLocation: hidden-or-dialog-only
+- stepId: 164
+  stepName: Perform Script on Server
+  displayName: null
+  options:
+  - xmlPath: WaitForCompletion/@state
+    key: waitForCompletion
+    type: boolean
+    label: Wait for completion
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Wait for completion
+    falseText: null
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+  - xmlPath: Script/@name
+    key: script
+    type: reference
+    label: script
+    displayLocation: inline
+- stepId: 165
+  stepName: Open Manage Themes
+  displayName: null
+  options: []
+- stepId: 166
+  stepName: Show/Hide Menubar
+  displayName: null
+  options:
+  - xmlPath: Lock/@state
+    key: lock
+    type: boolean
+    label: Lock
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Lock
+    falseText: null
+  - xmlPath: ShowHide/@value
+    key: showHide
+    type: enum
+    label: Show/Hide
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Hide
+      displayText: Hide
+- stepId: 167
+  stepName: Refresh Object
+  displayName: null
+  options: []
+- stepId: 168
+  stepName: Set Layout Object Animation
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Enable animation
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 169
+  stepName: Close Popover
+  displayName: null
+  options: []
+- stepId: 172
+  stepName: Open Upload to Host
+  displayName: null
+  options: []
+- stepId: 175
+  stepName: Perform JavaScript in Web Viewer
+  displayName: null
+  options: []
+- stepId: 177
+  stepName: AVPlayer Play
+  displayName: null
+  options:
+  - xmlPath: Source/@value
+    key: source
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Object
+      displayText: Object
+  - xmlPath: Presentation/@value
+    key: presentation
+    type: enum
+    label: Presentation
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Start Full Screen
+      displayText: Start Full Screen
+  - xmlPath: PlaybackPosition/Calculation
+    key: playbackPosition
+    type: calculation
+    label: playbackPosition
+    displayLocation: inline
+  - xmlPath: StartOffset/Calculation
+    key: startOffset
+    type: calculation
+    label: startOffset
+    displayLocation: inline
+  - xmlPath: EndOffset/Calculation
+    key: endOffset
+    type: calculation
+    label: endOffset
+    displayLocation: inline
+  - xmlPath: HideControls/@value
+    key: hideControls
+    type: boolean
+    label: Hide controls
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: DisableInteraction/@value
+    key: disableInteraction
+    type: boolean
+    label: Disable interaction
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 178
+  stepName: AVPlayer Set Playback State
+  displayName: null
+  options:
+  - xmlPath: PlaybackState/@value
+    key: playbackState
+    type: enum
+    label: Playback state
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Stopped
+      displayText: Stopped
+- stepId: 179
+  stepName: AVPlayer Set Options
+  displayName: null
+  options:
+  - xmlPath: Presentation/@value
+    key: presentation
+    type: enum
+    label: Presentation
+    displayLocation: hidden-or-dialog-only
+    allowedValues:
+    - xmlValue: Start Full Screen
+      displayText: Start Full Screen
+  - xmlPath: PlaybackPosition/Calculation
+    key: playbackPosition
+    type: calculation
+    label: playbackPosition
+    displayLocation: inline
+  - xmlPath: StartOffset/Calculation
+    key: startOffset
+    type: calculation
+    label: startOffset
+    displayLocation: inline
+  - xmlPath: EndOffset/Calculation
+    key: endOffset
+    type: calculation
+    label: endOffset
+    displayLocation: inline
+  - xmlPath: Volume/Calculation
+    key: volume
+    type: calculation
+    label: volume
+    displayLocation: inline
+  - xmlPath: HideControls/@value
+    key: hideControls
+    type: boolean
+    label: Hide controls
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: DisableInteraction/@value
+    key: disableInteraction
+    type: boolean
+    label: Disable interaction
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: DisableExternalControls/@value
+    key: disableExternalControls
+    type: boolean
+    label: Disable external controls
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: PauseInBackground/@value
+    key: pauseInBackground
+    type: boolean
+    label: Pause in background
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Zoom/@value
+    key: zoom
+    type: enum
+    label: Zoom
+    displayLocation: hidden-or-dialog-only
+    allowedValues:
+    - xmlValue: Fit
+      displayText: Fit
+  - xmlPath: Sequence/@value
+    key: sequence
+    type: enum
+    label: Sequence
+    displayLocation: hidden-or-dialog-only
+    allowedValues:
+    - xmlValue: None
+      displayText: None
+- stepId: 180
+  stepName: Refresh Portal
+  displayName: null
+  options: []
+- stepId: 181
+  stepName: Get Folder Path
+  displayName: null
+  options:
+  - xmlPath: AllowFolderCreation/@state
+    key: allowFolderCreation
+    type: boolean
+    label: Allow folder creation
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Allow folder creation
+    falseText: null
+  - xmlPath: Repetition/Calculation
+    key: repetition
+    type: calculation
+    label: repetition
+    displayLocation: inline
+  - xmlPath: DialogTitle/Calculation
+    key: dialogTitle
+    type: calculation
+    label: dialogTitle
+    displayLocation: inline
+  - xmlPath: DefaultLocation/Calculation
+    key: defaultLocation
+    type: calculation
+    label: defaultLocation
+    displayLocation: inline
+  - xmlPath: Name/text()
+    key: name
+    type: text
+    label: name
+    displayLocation: inline
+- stepId: 182
+  stepName: Truncate Table
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: BaseTable/@name
+    key: baseTable
+    type: reference
+    label: baseTable
+    displayLocation: inline
+- stepId: 183
+  stepName: Open Favorites
+  displayName: null
+  options: []
+- stepId: 185
+  stepName: Configure Region Monitor Script
+  displayName: null
+  options:
+  - xmlPath: MonitorType/@value
+    key: monitorType
+    type: enum
+    label: Type
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: iBeacon
+      displayText: iBeacon
+- stepId: 187
+  stepName: Configure Local Notification
+  displayName: null
+  options:
+  - xmlPath: Action/@value
+    key: action
+    type: enum
+    label: Action
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Queue
+      displayText: Queue
+- stepId: 188
+  stepName: Get File Exists
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: Text
+    key: text
+    type: unknown
+    label: text
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Field/text()
+    key: field
+    type: text
+    label: field
+    displayLocation: inline
+- stepId: 189
+  stepName: Get File Size
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+  - xmlPath: Text
+    key: text
+    type: unknown
+    label: text
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Field/text()
+    key: field
+    type: text
+    label: field
+    displayLocation: inline
+- stepId: 190
+  stepName: Create Data File
+  displayName: null
+  options:
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+- stepId: 191
+  stepName: Open Data File
+  displayName: null
+  options: []
+- stepId: 192
+  stepName: Write to Data File
+  displayName: null
+  options:
+  - xmlPath: AppendLineFeed/@state
+    key: appendLineFeed
+    type: boolean
+    label: Append line feed
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Append line feed
+    falseText: null
+  - xmlPath: DataSourceType/@value
+    key: dataSourceType
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: '1'
+      displayText: UTF-8
+- stepId: 193
+  stepName: Read from Data File
+  displayName: null
+  options:
+  - xmlPath: DataSourceType/@value
+    key: dataSourceType
+    type: enum
+    label: Source
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: '3'
+      displayText: ASCII
+- stepId: 194
+  stepName: Get Data File Position
+  displayName: null
+  options:
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+  - xmlPath: Text
+    key: text
+    type: unknown
+    label: text
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Field/text()
+    key: field
+    type: text
+    label: field
+    displayLocation: inline
+- stepId: 195
+  stepName: Set Data File Position
+  displayName: null
+  options: []
+- stepId: 196
+  stepName: Close Data File
+  displayName: null
+  options:
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+- stepId: 197
+  stepName: Delete File
+  displayName: null
+  options:
+  - xmlPath: UniversalPathList/text()
+    key: universalPathList
+    type: text
+    label: universalPathList
+    displayLocation: inline
+- stepId: 199
+  stepName: Rename File
+  displayName: null
+  options: []
+- stepId: 200
+  stepName: Set Error Logging
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Enable logging
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 201
+  stepName: Configure NFC Reading
+  displayName: null
+  options:
+  - xmlPath: Action/@value
+    key: action
+    type: enum
+    label: Action
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Read
+      displayText: Read
+- stepId: 202
+  stepName: Configure Machine Learning Model
+  displayName: null
+  options:
+  - xmlPath: ConfigureCoreML
+    key: configureCoreML
+    type: object
+    label: configureCoreML
+    displayLocation: hidden-or-dialog-only
+- stepId: 203
+  stepName: Execute FileMaker Data API
+  displayName: null
+  options:
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+  - xmlPath: Text
+    key: text
+    type: unknown
+    label: text
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Field/text()
+    key: field
+    type: text
+    label: field
+    displayLocation: inline
+- stepId: 205
+  stepName: Open Transaction
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: ESSForceCommit/@state
+    key: eSSForceCommit
+    type: boolean
+    label: Force commit
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SkipAutoEntry/@state
+    key: skipAutoEntry
+    type: boolean
+    label: Skip auto-enter
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 206
+  stepName: Commit Transaction
+  displayName: null
+  options: []
+- stepId: 207
+  stepName: Revert Transaction
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+- stepId: 208
+  stepName: Set Session Identifier
+  displayName: null
+  options: []
+- stepId: 209
+  stepName: Set Dictionary
+  displayName: null
+  options:
+  - xmlPath: MainDictionary/@value
+    key: mainDictionary
+    type: enum
+    label: Main dictionary
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: US English
+      displayText: US English
+- stepId: 210
+  stepName: Perform Script on Server with Callback
+  displayName: null
+  options:
+  - xmlPath: CallbackScriptState/@value
+    key: callbackScriptState
+    type: enum
+    label: Callback state
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: Continue
+      displayText: Continue
+  - xmlPath: Calculation/text()
+    key: calculation
+    type: text
+    label: calculation
+    displayLocation: inline
+  - xmlPath: Script/@name
+    key: script
+    type: reference
+    label: script
+    displayLocation: inline
+  - xmlPath: CallbackScript
+    key: callbackScript
+    type: object
+    label: callbackScript
+    displayLocation: hidden-or-dialog-only
+- stepId: 211
+  stepName: Trigger Claris Connect Flow
+  displayName: null
+  options:
+  - xmlPath: NoInteract/@state
+    key: noInteract
+    type: boolean
+    label: No dialog
+    displayLocation: continuation
+    omitWhenFalse: true
+    trueText: No dialog
+    falseText: null
+  - xmlPath: DontEncodeURL/@state
+    key: dontEncodeURL
+    type: boolean
+    label: Do not automatically encode URL
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: continuation
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: VerifySSLCertificates/@state
+    key: verifySSLCertificates
+    type: boolean
+    label: Verify SSL Certificates
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Flow/text()
+    key: flow
+    type: text
+    label: flow
+    displayLocation: inline
+  - xmlPath: CURLOptions/Calculation
+    key: cURLOptions
+    type: calculation
+    label: cURLOptions
+    displayLocation: inline
+  - xmlPath: Text/text()
+    key: text
+    type: text
+    label: text
+    displayLocation: inline
+- stepId: 212
+  stepName: Configure AI Account
+  displayName: null
+  options:
+  - xmlPath: LLMType/@value
+    key: lLMType
+    type: enum
+    label: Provider
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: ChatGPT
+      displayText: ChatGPT
+  - xmlPath: SetLLMAccout
+    key: setLLMAccout
+    type: object
+    label: setLLMAccout
+    displayLocation: hidden-or-dialog-only
+- stepId: 213
+  stepName: Fine-Tune Model
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Table/@name
+    key: table
+    type: reference
+    label: table
+    displayLocation: inline
+  - xmlPath: FineTuneLLM
+    key: fineTuneLLM
+    type: object
+    label: fineTuneLLM
+    displayLocation: hidden-or-dialog-only
+- stepId: 214
+  stepName: Perform SQL Query by Natural Language
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Stream/@state
+    key: stream
+    type: boolean
+    label: Stream
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Stream
+    falseText: null
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: PerformSQLQuerybyNaturalLanguage
+    key: performSQLQuerybyNaturalLanguage
+    type: object
+    label: performSQLQuerybyNaturalLanguage
+    displayLocation: hidden-or-dialog-only
+- stepId: 215
+  stepName: Insert Embedding
+  displayName: null
+  options:
+  - xmlPath: LLMEmbedding
+    key: lLMEmbedding
+    type: unknown
+    label: lLMEmbedding
+    displayLocation: hidden-or-dialog-only
+- stepId: 216
+  stepName: Insert Embedding in Found Set
+  displayName: null
+  options:
+  - xmlPath: LLMBulkEmbedding
+    key: lLMBulkEmbedding
+    type: unknown
+    label: lLMBulkEmbedding
+    displayLocation: hidden-or-dialog-only
+- stepId: 217
+  stepName: Set AI Call Logging
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Set
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+  - xmlPath: LLMDebugLog
+    key: lLMDebugLog
+    type: unknown
+    label: lLMDebugLog
+    displayLocation: hidden-or-dialog-only
+- stepId: 218
+  stepName: Perform Semantic Find
+  displayName: null
+  options:
+  - xmlPath: LLMSemanticFind
+    key: lLMSemanticFind
+    type: object
+    label: lLMSemanticFind
+    displayLocation: hidden-or-dialog-only
+- stepId: 219
+  stepName: Perform RAG Action
+  displayName: null
+  options:
+  - xmlPath: RAGSpace
+    key: rAGSpace
+    type: object
+    label: rAGSpace
+    displayLocation: hidden-or-dialog-only
+- stepId: 220
+  stepName: Generate Response from Model
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: Stream/@state
+    key: stream
+    type: boolean
+    label: Stream
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Stream
+    falseText: null
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Set
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: LinkAvail/@state
+    key: linkAvail
+    type: boolean
+    label: Link
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: Restore/@state
+    key: restore
+    type: boolean
+    label: Restore
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: UniversalPathList
+    key: universalPathList
+    type: unknown
+    label: universalPathList
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: LLMRequestWithTools
+    key: lLMRequestWithTools
+    type: object
+    label: lLMRequestWithTools
+    displayLocation: hidden-or-dialog-only
+- stepId: 221
+  stepName: Perform Find by Natural Language
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: SelectAll/@state
+    key: selectAll
+    type: boolean
+    label: Select
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Select
+    falseText: null
+  - xmlPath: LLMCreateFind
+    key: lLMCreateFind
+    type: object
+    label: lLMCreateFind
+    displayLocation: hidden-or-dialog-only
+- stepId: 222
+  stepName: Configure Regression Model
+  displayName: null
+  options:
+  - xmlPath: LLMTrain
+    key: lLMTrain
+    type: object
+    label: lLMTrain
+    displayLocation: hidden-or-dialog-only
+- stepId: 223
+  stepName: Set Revert Transaction on Error
+  displayName: null
+  options:
+  - xmlPath: Set/@state
+    key: set
+    type: boolean
+    label: Set
+    displayLocation: inline
+    omitWhenFalse: null
+    trueText: 'On'
+    falseText: 'Off'
+- stepId: 225
+  stepName: Save Records as JSONL
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: CreateDirectories/@state
+    key: createDirectories
+    type: boolean
+    label: Create Directories
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create Directories
+    falseText: null
+  - xmlPath: FineTuneFormat/@state
+    key: fineTuneFormat
+    type: boolean
+    label: Fine-tune format
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: AutoOpen/@state
+    key: autoOpen
+    type: boolean
+    label: Automatically open file
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Automatically open file
+    falseText: null
+  - xmlPath: CreateEmail/@state
+    key: createEmail
+    type: boolean
+    label: Create email
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Create email
+    falseText: null
+  - xmlPath: SaveAsJSONL
+    key: saveAsJSONL
+    type: unknown
+    label: saveAsJSONL
+    displayLocation: hidden-or-dialog-only
+- stepId: 226
+  stepName: Configure Prompt Template
+  displayName: null
+  options:
+  - xmlPath: Option/@state
+    key: option
+    type: boolean
+    label: Option
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: ConfigurePromptTemplate
+    key: configurePromptTemplate
+    type: object
+    label: configurePromptTemplate
+    displayLocation: hidden-or-dialog-only
+- stepId: 227
+  stepName: 'Configure RAG Account '
+  displayName: null
+  options:
+  - xmlPath: VerifySSLCertificates/@state
+    key: verifySSLCertificates
+    type: boolean
+    label: Verify SSL Certificates
+    displayLocation: hidden-or-dialog-only
+    omitWhenFalse: null
+    trueText: null
+    falseText: null
+  - xmlPath: ConfigureRAGAccount
+    key: configureRAGAccount
+    type: object
+    label: configureRAGAccount
+    displayLocation: hidden-or-dialog-only
+- stepId: 228
+  stepName: Go to List of Records
+  displayName: null
+  options:
+  - xmlPath: ShowInNewWindow/@state
+    key: showInNewWindow
+    type: boolean
+    label: Show in new window
+    displayLocation: inline
+    omitWhenFalse: true
+    trueText: Show in new window
+    falseText: null
+  - xmlPath: LayoutDestination/@value
+    key: layoutDestination
+    type: enum
+    label: Layout
+    displayLocation: inline
+    allowedValues:
+    - xmlValue: SelectedLayout
+      displayText: (layout name)
+  - xmlPath: RowList/Calculation
+    key: rowList
+    type: calculation
+    label: rowList
+    displayLocation: inline
+  - xmlPath: NewWndStyles
+    key: newWndStyles
+    type: unknown
+    label: newWndStyles
+    displayLocation: hidden-or-dialog-only
+  - xmlPath: Layout/@name
+    key: layout
+    type: reference
+    label: layout
+    displayLocation: inline

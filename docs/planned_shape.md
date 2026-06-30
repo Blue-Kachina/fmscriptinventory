@@ -1,26 +1,20 @@
-# Ultimate JSON Shape for Inventorying FileMaker Pro Script Steps
+# JSON Schema Reference: FM Script Step Inventory
 
-## Context
+## Architecture
 
-This document proposes a JSON structure for inventorying FileMaker Pro script steps using two complementary source formats:
+This project produces a JSON catalog of every FileMaker Pro script step, mapping each step's internal XML structure to its script editor display representation.
 
-1. **FileMaker clipboard XML** — the richer, machine-readable source of truth.
-2. **Printed Script PDF** — the human-facing GUI representation of the same script.
+Two inputs drive the output:
 
-The goal is to map XML script steps to printed script steps, preserve FileMaker's executable step structure, and also retain how each step and its options are displayed in FileMaker Pro's GUI.
+1. **`to_analyze/script.xml`** — a FileMaker clipboard export (`fmxmlsnippet`) of a script containing one instance of every step. This is the lossless, machine-readable source of truth. Options that are hidden or dialog-only are still present in the XML even when they're invisible in the script editor.
 
-The recommended model is not just an array of rendered script lines. It should be an array of **step definitions / step observations** that can round-trip between:
+2. **`display_map.yaml`** — a human-curated YAML file that records display semantics for each step's options: the UI label, where the option appears (inline, continuation, or dialog-only), and the display text for boolean and enum values.
 
-- FileMaker clipboard XML
-- Printed GUI text
-- Parsed normalized options
-- Your own stable inventory layer
-
-The XML should be treated as the canonical source. The printed script should be treated as a display/rendering profile.
+The XML is canonical. The display map is the rendering profile. Neither alone is sufficient.
 
 ---
 
-## Recommended Top-Level JSON Shape
+## Top-Level JSON Shape
 
 ```json
 {
@@ -34,24 +28,21 @@ The XML should be treated as the canonical source. The printed script should be 
   "sources": {
     "xml": {
       "type": "clipboard-fmxmlsnippet",
-      "scriptName": "OneOfEverything",
-      "rawAvailable": true
-    },
-    "printed": {
-      "type": "script-print-pdf",
-      "scriptName": "OneOfEverything",
-      "rawAvailable": true
+      "file": "to_analyze/script.xml",
+      "scriptCount": 1,
+      "stepCount": 207
     }
   },
-  "steps": []
+  "stepDefinitions": [],
+  "scriptInstances": []
 }
 ```
 
-The most important part is each object inside `steps`.
-
 ---
 
-## Recommended Step Object Shape
+## Step Definition Object
+
+One entry per unique FileMaker step ID. The full shape with all fields:
 
 ```json
 {
@@ -59,7 +50,7 @@ The most important part is each object inside `steps`.
   "fmStepId": 86,
   "names": {
     "xml": "Set Error Capture",
-    "printed": "Set Error Capture",
+    "display": null,
     "canonical": "Set Error Capture",
     "aliases": []
   },
@@ -71,134 +62,84 @@ The most important part is each object inside `steps`.
   },
   "xml": {
     "stepAttributes": {
-      "enable": {
-        "type": "boolean",
-        "xmlAttribute": "@enable",
-        "default": true
-      },
-      "id": {
-        "type": "integer",
-        "xmlAttribute": "@id"
-      },
-      "name": {
-        "type": "string",
-        "xmlAttribute": "@name"
-      }
+      "enable": { "type": "boolean", "xmlAttribute": "@enable", "default": true },
+      "id":     { "type": "integer", "xmlAttribute": "@id" },
+      "name":   { "type": "string",  "xmlAttribute": "@name" }
     },
     "template": "<Step enable=\"{{enabled}}\" id=\"86\" name=\"Set Error Capture\"><Set state=\"{{setState}}\"/></Step>",
     "children": [
       {
         "path": "Set",
-        "attributes": {
-          "state": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        "text": null,
-        "required": true
+        "type": "boolean",
+        "attributes": { "state": { "observed": "True" } },
+        "hasText": false,
+        "hasChildren": false
       }
     ],
     "observedExamples": [
-      {
-        "xml": "<Step enable=\"True\" id=\"86\" name=\"Set Error Capture\"><Set state=\"True\"/></Step>"
-      }
+      { "xml": "<Step enable=\"True\" id=\"86\" name=\"Set Error Capture\"><Set state=\"True\"/></Step>" }
     ]
   },
   "display": {
-    "printedTemplate": "Set Error Capture [ {{setState|onOff}} ]",
+    "displayName": null,
     "parts": [
-      {
-        "type": "stepName",
-        "value": "Set Error Capture"
-      },
+      { "type": "stepName", "value": "Set Error Capture" },
       {
         "type": "inlineOptions",
         "brackets": true,
-        "separator": "; ",
-        "items": [
-          {
-            "optionKey": "setState",
-            "when": "always",
-            "format": "{{value|onOff}}"
-          }
-        ]
+        "items": [{ "optionKey": "set", "label": "Set error capture" }]
       }
-    ],
-    "observedPrinted": [
-      "Set Error Capture [ On ]"
     ]
   },
   "options": [
     {
-      "key": "setState",
-      "label": "Set",
+      "key": "set",
+      "label": "Set error capture",
       "type": "boolean",
-      "source": {
-        "xmlPath": "Set/@state"
-      },
+      "source": { "xmlPath": "Set/@state" },
       "display": {
         "location": "inline",
         "trueText": "On",
-        "falseText": "Off",
-        "template": "{{value|onOff}}"
+        "falseText": "Off"
       },
-      "default": false,
-      "allowedValues": [true, false]
+      "allowedValues": [true, false],
+      "default": false
     }
   ],
   "parameters": [],
   "validation": {
-    "requiredOptions": ["setState"],
+    "requiredOptions": [],
     "mutuallyExclusive": [],
     "dependencies": []
-  },
-  "mapping": {
-    "matchStrategy": "sequential-name-normalized",
-    "confidence": 1,
-    "xmlStepIndex": null,
-    "printedStepIndex": null,
-    "notes": []
   },
   "notes": []
 }
 ```
 
-This shape separates:
+### names
 
-- What FileMaker stores
-- What FileMaker displays
-- How your system should understand the option semantically
+| Field | Source | Description |
+|---|---|---|
+| `xml` | XML `@name` | Step name as stored in the fmxmlsnippet |
+| `display` | `display_map.yaml` `displayName` | Override for steps where the UI name differs from the XML name (usually `null`) |
+| `canonical` | normalized `xml` | Whitespace-collapsed version used as the slug base |
+| `aliases` | manual | Alternative names this step may appear as |
 
----
+### display.parts
 
-## Why the XML Must Be Canonical
+An array describing the visual structure of the step in the script editor:
 
-The XML and printed script do not contain the same amount of information.
+| Type | Description |
+|---|---|
+| `stepName` | The step's display name (first element always) |
+| `inlineOptions` | Options shown in `[ ]` on the same line as the step name |
+| `continuationOptions` | Options shown in `[ ]` on the next indented line |
 
-For example, the printed script might show:
-
-```text
-Insert from URL [ ]
-    [ Select; No dialog ]
-```
-
-But the XML may contain several independent option nodes:
-
-```xml
-<Step enable="True" id="160" name="Insert from URL">
-  <NoInteract state="True"/>
-  <DontEncodeURL state="False"/>
-  <SelectAll state="True"/>
-  <VerifySSLCertificates state="False"/>
-</Step>
-```
-
-The printed script shows `Select` and `No dialog`, but it may not expose every XML child option. Therefore, the display text should not be the source of truth.
+`parts` is auto-built from the options that have a known `displayLocation`. It updates on each `analyze.py` run as `display_map.yaml` is filled in.
 
 ---
 
-## Stronger Example: `Insert from URL`
+## Example: Insert from URL (complex step)
 
 ```json
 {
@@ -206,450 +147,259 @@ The printed script shows `Select` and `No dialog`, but it may not expose every X
   "fmStepId": 160,
   "names": {
     "xml": "Insert from URL",
-    "printed": "Insert from URL",
+    "display": null,
     "canonical": "Insert from URL",
     "aliases": []
   },
-  "kind": {
-    "category": "field-editing",
-    "controlFlowRole": null,
-    "isContainerStep": false,
-    "isTerminatorStep": false
-  },
   "xml": {
-    "template": "<Step enable=\"{{enabled}}\" id=\"160\" name=\"Insert from URL\"><NoInteract state=\"{{noDialog}}\"/><DontEncodeURL state=\"{{dontEncodeUrl}}\"/><SelectAll state=\"{{selectTargetContents}}\"/><VerifySSLCertificates state=\"{{verifySslCertificates}}\"/></Step>",
+    "template": "<Step enable=\"{{enabled}}\" id=\"160\" name=\"Insert from URL\"><NoInteract state=\"{{noInteractState}}\"/><DontEncodeURL state=\"{{dontEncodeURLState}}\"/><SelectAll state=\"{{selectAllState}}\"/><VerifySSLCertificates state=\"{{verifySSLCertificatesState}}\"/></Step>",
     "children": [
-      {
-        "path": "NoInteract",
-        "attributes": {
-          "state": {
-            "type": "boolean"
-          }
-        },
-        "required": false
-      },
-      {
-        "path": "DontEncodeURL",
-        "attributes": {
-          "state": {
-            "type": "boolean"
-          }
-        },
-        "required": false
-      },
-      {
-        "path": "SelectAll",
-        "attributes": {
-          "state": {
-            "type": "boolean"
-          }
-        },
-        "required": false
-      },
-      {
-        "path": "VerifySSLCertificates",
-        "attributes": {
-          "state": {
-            "type": "boolean"
-          }
-        },
-        "required": false
-      }
+      { "path": "NoInteract",           "type": "boolean", "attributes": { "state": { "observed": "True" } },  "hasText": false, "hasChildren": false },
+      { "path": "DontEncodeURL",        "type": "boolean", "attributes": { "state": { "observed": "False" } }, "hasText": false, "hasChildren": false },
+      { "path": "SelectAll",            "type": "boolean", "attributes": { "state": { "observed": "True" } },  "hasText": false, "hasChildren": false },
+      { "path": "VerifySSLCertificates","type": "boolean", "attributes": { "state": { "observed": "False" } }, "hasText": false, "hasChildren": false }
     ],
     "observedExamples": [
-      {
-        "xml": "<Step enable=\"True\" id=\"160\" name=\"Insert from URL\"><NoInteract state=\"True\"/><DontEncodeURL state=\"False\"/><SelectAll state=\"True\"/><VerifySSLCertificates state=\"False\"/></Step>"
-      }
+      { "xml": "<Step enable=\"True\" id=\"160\" name=\"Insert from URL\"><NoInteract state=\"True\"/><DontEncodeURL state=\"False\"/><SelectAll state=\"True\"/><VerifySSLCertificates state=\"False\"/></Step>" }
     ]
   },
   "display": {
-    "printedTemplate": "Insert from URL [ ]\n    [ {{selectTargetContents|select}}; {{noDialog|noDialog}} ]",
+    "displayName": null,
     "parts": [
-      {
-        "type": "stepName",
-        "value": "Insert from URL"
-      },
-      {
-        "type": "inlineOptions",
-        "brackets": true,
-        "items": []
-      },
+      { "type": "stepName", "value": "Insert from URL" },
       {
         "type": "continuationOptions",
         "brackets": true,
-        "separator": "; ",
         "items": [
-          {
-            "optionKey": "selectTargetContents",
-            "when": "true",
-            "text": "Select"
-          },
-          {
-            "optionKey": "noDialog",
-            "when": "true",
-            "text": "No dialog"
-          }
+          { "optionKey": "noInteract", "label": "No dialog" },
+          { "optionKey": "selectAll",  "label": "Select" }
         ]
       }
-    ],
-    "observedPrinted": [
-      "Insert from URL [ ]",
-      "[ Select; No dialog ]"
     ]
   },
   "options": [
     {
-      "key": "noDialog",
+      "key": "noInteract",
       "label": "No dialog",
       "type": "boolean",
-      "source": {
-        "xmlPath": "NoInteract/@state"
-      },
-      "display": {
-        "location": "continuation",
-        "trueText": "No dialog",
-        "falseText": null,
-        "omitWhenFalse": true
-      }
+      "source": { "xmlPath": "NoInteract/@state" },
+      "display": { "location": "continuation", "trueText": "No dialog", "omitWhenFalse": true },
+      "allowedValues": [true, false],
+      "default": false
     },
     {
-      "key": "selectTargetContents",
-      "label": "Select",
-      "type": "boolean",
-      "source": {
-        "xmlPath": "SelectAll/@state"
-      },
-      "display": {
-        "location": "continuation",
-        "trueText": "Select",
-        "falseText": null,
-        "omitWhenFalse": true
-      }
-    },
-    {
-      "key": "dontEncodeUrl",
+      "key": "dontEncodeURL",
       "label": "Do not automatically encode URL",
       "type": "boolean",
-      "source": {
-        "xmlPath": "DontEncodeURL/@state"
-      },
-      "display": {
-        "location": "hidden-or-dialog-only"
-      }
+      "source": { "xmlPath": "DontEncodeURL/@state" },
+      "display": { "location": "hidden-or-dialog-only" },
+      "allowedValues": [true, false],
+      "default": false
     },
     {
-      "key": "verifySslCertificates",
+      "key": "selectAll",
+      "label": "Select",
+      "type": "boolean",
+      "source": { "xmlPath": "SelectAll/@state" },
+      "display": { "location": "continuation", "trueText": "Select", "omitWhenFalse": true },
+      "allowedValues": [true, false],
+      "default": false
+    },
+    {
+      "key": "verifySSLCertificates",
       "label": "Verify SSL Certificates",
       "type": "boolean",
-      "source": {
-        "xmlPath": "VerifySSLCertificates/@state"
-      },
-      "display": {
-        "location": "hidden-or-dialog-only"
-      }
+      "source": { "xmlPath": "VerifySSLCertificates/@state" },
+      "display": { "location": "hidden-or-dialog-only" },
+      "allowedValues": [true, false],
+      "default": false
     }
   ],
-  "parameters": [
-    {
-      "key": "target",
-      "label": "Target",
-      "type": "field-or-variable",
-      "source": {
-        "xmlPath": null
-      },
-      "display": {
-        "placeholderWhenMissing": ""
-      },
-      "required": false
-    },
-    {
-      "key": "url",
-      "label": "URL",
-      "type": "calculation-or-text",
-      "source": {
-        "xmlPath": null
-      },
-      "required": false
-    },
-    {
-      "key": "curlOptions",
-      "label": "cURL options",
-      "type": "calculation",
-      "source": {
-        "xmlPath": "CURLOptions/Calculation"
-      },
-      "required": false
-    }
-  ],
-  "validation": {
-    "requiredOptions": [],
-    "mutuallyExclusive": [],
-    "dependencies": []
-  },
-  "mapping": {
-    "matchStrategy": "sequential-name-normalized",
-    "confidence": 1,
-    "notes": [
-      "Printed output shows Select and No dialog, but does not expose every XML child option."
-    ]
-  },
-  "notes": []
+  "parameters": [],
+  "notes": [
+    "NoInteract=True means the dialog is suppressed. The XML attribute name is inverted relative to the display label 'No dialog'."
+  ]
 }
 ```
 
----
-
-## Add an Instance Layer for Real Scripts
-
-The catalog above describes a **step type**. When parsing an actual FileMaker script, you also need the actual step occurrence.
-
-```json
-{
-  "instanceId": "oneofeverything.step.160",
-  "stepIndex": 160,
-  "enabled": true,
-  "definitionKey": "insert-from-url",
-  "fmStepId": 160,
-  "name": "Insert from URL",
-  "raw": {
-    "xml": "<Step enable=\"True\" id=\"160\" name=\"Insert from URL\">...</Step>",
-    "printedLines": [
-      "Insert from URL [ ]",
-      "[ Select; No dialog ]"
-    ]
-  },
-  "values": {
-    "noDialog": true,
-    "selectTargetContents": true,
-    "dontEncodeUrl": false,
-    "verifySslCertificates": false,
-    "target": null,
-    "url": null,
-    "curlOptions": null
-  },
-  "rendered": {
-    "printed": "Insert from URL [ ]\n    [ Select; No dialog ]",
-    "compact": "Insert from URL [ Select; No dialog ]"
-  },
-  "children": []
-}
-```
-
-This lets you maintain both:
-
-```json
-{
-  "stepDefinitions": [],
-  "scriptInstances": []
-}
-```
+The key insight here: the script editor shows `[ Select; No dialog ]` in a continuation line, but the XML has four child elements — two of which (`DontEncodeURL`, `VerifySSLCertificates`) are completely invisible in the script editor. The display map records this split.
 
 ---
 
-## Mapping Strategy from XML to Printed PDF
+## The Option Object
 
-Use **order first**, then normalized name.
-
-Do not map by name alone. A script can contain repeated comments, repeated steps, and control-flow structures. The printed script can also contain blank lines, page headers, page footers, and continuation option lines.
-
-Recommended process:
-
-```text
-1. Parse XML into Step[].
-2. Parse printed PDF into logical printed steps:
-   - A new step starts on a non-indented line.
-   - Indented bracket lines belong to the previous step.
-   - Ignore page headers and footers.
-3. Normalize names:
-   - "#Comment" -> "# (comment)"
-   - trim whitespace
-   - collapse repeated spaces
-   - remove harmless trailing spaces, e.g. "Configure RAG Account "
-4. Walk both lists sequentially.
-5. Match each XML step to the next printed logical step.
-6. Store confidence:
-   - 1.0 = same normalized name and same sequence
-   - 0.8 = alias matched
-   - 0.5 = sequence matched but printed name is absent or ambiguous
-7. Preserve raw XML and raw printed lines even when parsed values are incomplete.
-```
-
----
-
-## The Option Object Should Be the Heart of the Model
-
-Most FileMaker script step complexity is option mapping. Standardize every option like this:
+Every option follows this shape:
 
 ```json
 {
-  "key": "noDialog",
+  "key": "noInteract",
   "label": "No dialog",
   "type": "boolean",
   "source": {
-    "xmlPath": "NoInteract/@state",
-    "xmlValueMap": {
-      "True": true,
-      "False": false
-    }
+    "xmlPath": "NoInteract/@state"
   },
   "display": {
-    "location": "inline | continuation | dialog | hidden-or-dialog-only",
+    "location": "inline | continuation | hidden-or-dialog-only",
     "trueText": "No dialog",
     "falseText": null,
-    "omitWhenFalse": true,
-    "template": "{{trueText}}",
-    "order": 20
+    "omitWhenFalse": true
   },
   "default": false,
-  "allowedValues": [true, false],
-  "required": false,
-  "notes": []
+  "allowedValues": [true, false]
 }
 ```
 
-### Enum Option Example
+| Field | Description |
+|---|---|
+| `key` | Camel-case identifier (from `display_map.yaml` if provided; otherwise derived from XML tag) |
+| `label` | Human-readable name as shown in the script editor dialog |
+| `type` | `boolean`, `enum`, `calculation`, `text`, `object`, or `unknown` |
+| `source.xmlPath` | XPath-like pointer to the value within the step's XML children |
+| `display.location` | Where the option appears in the script editor |
+| `display.trueText` | Text shown when the boolean is `true` (boolean only) |
+| `display.falseText` | Text shown when the boolean is `false` (boolean only; `null` = not shown) |
+| `display.omitWhenFalse` | If `true`, the option is not mentioned when its value is `false` |
+| `allowedValues` | `[true, false]` for booleans; array of `{xmlValue, displayText}` for enums |
+
+### Enum option example
 
 ```json
 {
   "key": "windowState",
   "label": "Window state",
   "type": "enum",
-  "source": {
-    "xmlPath": "WindowState/@value"
-  },
+  "source": { "xmlPath": "WindowState/@value" },
+  "display": { "location": "inline" },
   "allowedValues": [
-    {
-      "value": "ResizeToFit",
-      "printed": "Resize to Fit"
-    },
-    {
-      "value": "Minimize",
-      "printed": "Minimize"
-    },
-    {
-      "value": "Maximize",
-      "printed": "Maximize"
-    }
-  ],
-  "display": {
-    "location": "continuation",
-    "template": "{{value.printed}}"
-  }
-}
-```
-
-### Nested Option Group Example
-
-For complex nested options, such as PDF options, keep the nesting:
-
-```json
-{
-  "key": "pdfOptions",
-  "label": "PDF Options",
-  "type": "object",
-  "source": {
-    "xmlPath": "PDFOptions"
-  },
-  "properties": {
-    "source": {
-      "type": "enum",
-      "source": {
-        "xmlPath": "PDFOptions/@source"
-      }
-    },
-    "security": {
-      "type": "object",
-      "source": {
-        "xmlPath": "PDFOptions/Security"
-      }
-    },
-    "view": {
-      "type": "object",
-      "source": {
-        "xmlPath": "PDFOptions/View"
-      }
-    }
-  },
-  "display": {
-    "location": "dialog",
-    "summaryTemplate": "{{source|pdfSourceSummary}}"
-  }
+    { "xmlValue": "ResizeToFit", "displayText": "Resize to Fit" },
+    { "xmlValue": "Minimize",    "displayText": "Minimize" },
+    { "xmlValue": "Maximize",    "displayText": "Maximize" }
+  ]
 }
 ```
 
 ---
 
-## Fields to Always Include on Every Step Definition
+## Script Instance Object
+
+One instance per step occurrence in the source script(s). Instances reference their parent definition by `definitionKey` and store pre-parsed option values keyed by the definition's option keys.
 
 ```json
 {
-  "stepKey": "",
-  "fmStepId": null,
-  "names": {
-    "xml": "",
-    "printed": "",
-    "canonical": "",
-    "aliases": []
+  "instanceId": "oneofeverything.step.47",
+  "scriptName": "OneOfEverything",
+  "stepIndex": 47,
+  "enabled": true,
+  "fmStepId": 160,
+  "name": "Insert from URL",
+  "definitionKey": "insert-from-url",
+  "raw": {
+    "xml": "<Step enable=\"True\" id=\"160\" name=\"Insert from URL\"><NoInteract state=\"True\"/><DontEncodeURL state=\"False\"/><SelectAll state=\"True\"/><VerifySSLCertificates state=\"False\"/></Step>"
   },
-  "kind": {
-    "category": null,
-    "controlFlowRole": null,
-    "isContainerStep": false,
-    "isTerminatorStep": false
-  },
-  "xml": {
-    "template": "",
-    "stepAttributes": {},
-    "children": [],
-    "observedExamples": []
-  },
-  "display": {
-    "printedTemplate": "",
-    "parts": [],
-    "observedPrinted": []
-  },
-  "options": [],
-  "parameters": [],
-  "validation": {
-    "requiredOptions": [],
-    "mutuallyExclusive": [],
-    "dependencies": []
-  },
-  "mapping": {
-    "matchStrategy": "",
-    "confidence": null,
-    "notes": []
-  },
-  "notes": []
+  "values": {
+    "noInteract": true,
+    "dontEncodeURL": false,
+    "selectAll": true,
+    "verifySSLCertificates": false
+  }
 }
+```
+
+`values` keys match the option `key` fields in the parent step definition, so a consumer can look up display rules without any XML-path translation:
+
+```
+definition.options[i].key  →  instance.values[key]  →  display rule from definition.options[i].display
 ```
 
 ---
 
-## Final Recommendation
+## display_map.yaml Format
 
-Use the XML as the **lossless canonical source**, and treat the printed PDF as a **display renderer profile**.
+The display map is the human-knowledge layer. One entry per step ID:
 
-The printed version is excellent for learning what FileMaker's GUI chooses to show. However, it is not complete enough to recreate a step safely. The XML contains the actual persistent step structure, including options that may not be visible in the printed script.
-
-A strong final model should therefore separate:
-
-```json
-{
-  "stepDefinitions": [],
-  "scriptInstances": [],
-  "displayProfiles": [],
-  "sourceFiles": []
-}
+```yaml
+- stepId: 160
+  stepName: Insert from URL
+  displayName: null         # override if UI name differs from XML name
+  options:
+    - xmlPath: NoInteract/@state
+      key: noInteract                  # derived from XML tag name; update to semantic key if desired
+      type: boolean
+      label: No dialog                 # human-readable UI label
+      displayLocation: continuation    # inline | continuation | hidden-or-dialog-only
+      omitWhenFalse: true
+      trueText: No dialog
+      falseText: null
+    - xmlPath: DontEncodeURL/@state
+      key: dontEncodeURL
+      type: boolean
+      label: Do not automatically encode URL
+      displayLocation: hidden-or-dialog-only
+      omitWhenFalse: null
+      trueText: null
+      falseText: null
+    - xmlPath: SelectAll/@state
+      key: selectAll
+      type: boolean
+      label: Select
+      displayLocation: continuation
+      omitWhenFalse: true
+      trueText: Select
+      falseText: null
+    - xmlPath: VerifySSLCertificates/@state
+      key: verifySSLCertificates
+      type: boolean
+      label: Verify SSL Certificates
+      displayLocation: hidden-or-dialog-only
+      omitWhenFalse: null
+      trueText: null
+      falseText: null
 ```
 
-That gives you room to grow into:
+For enum options:
 
-- Multiple FileMaker versions
-- Multiple languages/locales
-- XML round-tripping
-- GUI display rendering
-- Diffing scripts semantically
-- Generating documentation
-- Validating script step options
-- Building a FileMaker script-step inventory database
+```yaml
+    - xmlPath: WindowState/@value
+      key: windowState
+      type: enum
+      label: Window state
+      displayLocation: inline
+      allowedValues:
+        - xmlValue: ResizeToFit
+          displayText: Resize to Fit
+        - xmlValue: Minimize
+          displayText: Minimize
+        - xmlValue: Maximize
+          displayText: Maximize
+```
+
+---
+
+## Why the XML Must Be Canonical
+
+The script editor display is a lossy view of the step's configuration. Two important cases:
+
+**1. Hidden options.** Options like `VerifySSLCertificates` and `DontEncodeURL` are only accessible via the step's configuration dialog. They do not appear in the script editor's inline or continuation display at all. The XML always contains them; the display map marks them `hidden-or-dialog-only`.
+
+**2. Inverted labels.** `<NoInteract state="True"/>` means "don't show a dialog". The script editor shows this as `No dialog` — an inverted label. The display map records the mapping: XML `True` → display `"No dialog"` (omit when False).
+
+The consumer must read option values from the XML (via `source.xmlPath`) and translate them to display text using the step definition. Never parse the script editor's display text as the source of truth.
+
+---
+
+## Future Growth Areas
+
+The current schema has placeholder fields intended for future extension:
+
+- `kind.category`, `kind.controlFlowRole`, `kind.isContainerStep`, `kind.isTerminatorStep` — step classification (control flow, field, window, file, etc.)
+- `parameters` — user-supplied values like field references, variable names, or file paths (currently empty; distinct from boolean/enum options)
+- `validation.requiredOptions`, `validation.mutuallyExclusive`, `validation.dependencies` — option constraint rules
+- `names.aliases` — alternative step names across FileMaker versions or locales
+- `display.displayName` — for the rare case where the script editor UI name differs from the XML `@name`
+
+The schema also naturally extends to:
+
+- Multiple FileMaker versions (different step IDs, renamed options)
+- Multiple locales (different display text)
+- Semantic script diffing (compare two scripts by step definition, not raw text)
+- XML round-tripping (generate valid XML from a definition + values)

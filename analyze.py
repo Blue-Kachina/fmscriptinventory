@@ -1,30 +1,31 @@
 #!/usr/bin/env python3
 """
 FM Script Inventory
-Correlates a FileMaker "OneOfEverything" script XML export with its PDF
-printed representation, producing a JSON catalog of step definitions and
-script instances.
+Parses a FileMaker fmxmlsnippet XML file and merges with a human-curated
+display_map.yaml to produce inventory.json — a step definition map for
+rendering FileMaker scripts in a UI.
 
 Usage:
-    pip install pdfplumber
-    python3 analyze.py
+    pip install pyyaml python-slugify
+    python3 analyze.py              # generate output/inventory.json
+    python3 analyze.py --gen-stubs  # append display_map.yaml stubs for unmapped steps
 """
 
 import json
 import re
+import sys
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
 
-import pdfplumber
+import yaml
 from slugify import slugify
-
-# ── Paths ─────────────────────────────────────────────────────────────────────
 
 BASE_DIR = Path(__file__).parent
 XML_PATH = BASE_DIR / "to_analyze" / "script.xml"
-PDF_PATH = BASE_DIR / "to_analyze" / "script.pdf"
+DISPLAY_MAP_PATH = BASE_DIR / "display_map.yaml"
 OUTPUT_PATH = BASE_DIR / "output" / "inventory.json"
+
 
 # ── XML parsing ───────────────────────────────────────────────────────────────
 
@@ -38,197 +39,60 @@ def _parse_child(elem):
 
 
 def parse_xml_steps(path):
-    """Return a list of step dicts from an fmxmlsnippet XML file."""
+    """Parse an fmxmlsnippet XML file; return list of {scriptName, steps} dicts.
+
+    Handles both single-Script and multi-Script snippets.
+    """
     tree = ET.parse(str(path))
     root = tree.getroot()
-    script = root.find("Script")
-    if script is None:
+    script_elems = root.findall("Script")
+    if not script_elems:
         raise ValueError("No <Script> element found in fmxmlsnippet")
-    steps = []
-    for idx, elem in enumerate(script.findall("Step")):
-        steps.append({
-            "index": idx,
-            "id": int(elem.get("id", 0)),
-            "name": elem.get("name", ""),
-            "enable": elem.get("enable", "True") == "True",
-            "raw_xml": ET.tostring(elem, encoding="unicode"),
-            "children": [_parse_child(c) for c in elem],
-        })
-    return steps
-
-# ── PDF parsing ───────────────────────────────────────────────────────────────
-
-_HEADER_RE = re.compile(r"^OneOfEverything$")
-_FOOTER_RE = re.compile(r"EverythingBagel")
-_CONT_RE = re.compile(r"^\[")
-_INLINE_RE = re.compile(r"^(.*?)(\[.*\])\s*$")
+    result = []
+    for script_elem in script_elems:
+        script_name = script_elem.get("name", "")
+        steps = []
+        for idx, elem in enumerate(script_elem.findall("Step")):
+            steps.append({
+                "index": idx,
+                "id": int(elem.get("id", 0)),
+                "name": elem.get("name", ""),
+                "enable": elem.get("enable", "True") == "True",
+                "raw_xml": ET.tostring(elem, encoding="unicode"),
+                "children": [_parse_child(c) for c in elem],
+            })
+        result.append({"scriptName": script_name, "steps": steps})
+    return result
 
 
-def extract_pdf_lines(path):
-    """
-    Return (is_continuation, text) pairs for every content line in the PDF,
-    filtering out per-page headers and footers.
-    """
-    lines = []
-    with pdfplumber.open(str(path)) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            if not text:
-                continue
-            for raw in text.split("\n"):
-                line = raw.strip()
-                if not line:
-                    continue
-                if _HEADER_RE.match(line) or _FOOTER_RE.search(line):
-                    continue
-                lines.append((bool(_CONT_RE.match(line)), line))
-    return lines
-
-
-def parse_pdf_steps(lines):
-    """
-    Group (is_continuation, text) pairs into printed step dicts.
-
-    A step starts on any non-continuation line. Subsequent lines that start
-    with '[' belong to that step as continuation option lines.
-
-    Some step-name lines are long enough that FileMaker wraps them across
-    two physical PDF lines. The wrapped fragment does not start with '[', so
-    it looks like a new step to a naive parser. We detect this by tracking
-    whether the open-bracket count exceeds the close-bracket count: if so,
-    we accumulate subsequent lines until the brackets balance.
-    """
-    steps = []
-    current = None
-    wrap_parts: list[str] = []  # non-empty while accumulating a wrapped name line
-
-    def _flush_name(raw_parts: list[str]) -> None:
-        nonlocal current
-        full = " ".join(raw_parts)
-        m = _INLINE_RE.match(full)
-        name_part = m.group(1).strip() if m else full
-        inline_part = m.group(2) if m else None
-        if current is not None:
-            steps.append(current)
-        current = {
-            "index": len(steps),  # fixed up at the end
-            "name": name_part,
-            "inline_options": inline_part,
-            "continuation_lines": [],
-            "raw_lines": list(raw_parts),
-        }
-
-    for is_cont, text in lines:
-        if wrap_parts:
-            # Accumulating a step-name line that wrapped across PDF lines.
-            # Every physical line here (continuation or not) is part of the
-            # name/inline-options text until the brackets balance.
-            wrap_parts.append(text)
-            accumulated = " ".join(wrap_parts)
-            if accumulated.count("[") <= accumulated.count("]"):
-                _flush_name(wrap_parts)
-                wrap_parts = []
-        elif is_cont:
-            if current is not None:
-                current["continuation_lines"].append(text)
-                current["raw_lines"].append(text)
-        else:
-            if text.count("[") > text.count("]"):
-                wrap_parts = [text]
-            else:
-                _flush_name([text])
-
-    if wrap_parts:
-        _flush_name(wrap_parts)
-    elif current is not None:
-        steps.append(current)
-
-    for i, step in enumerate(steps):
-        step["index"] = i
-
-    return steps
-
-# ── Name matching helpers ─────────────────────────────────────────────────────
+# ── Type / value helpers ──────────────────────────────────────────────────────
 
 def normalize_name(name):
     return re.sub(r"\s+", " ", (name or "").strip())
 
 
-def _is_empty_comment(xml_step):
-    """True if this is id=89 with no text content — not printed in PDF."""
-    if xml_step["id"] != 89:
-        return False
-    text_child = next((c for c in xml_step["children"] if c["tag"] == "Text"), None)
-    return text_child is None or not (text_child.get("text") or "").strip()
+def _option_key(tag):
+    """Lowercase first letter of an XML tag to produce a camelCase option key."""
+    return tag[0].lower() + tag[1:] if tag else tag
 
 
-def _pdf_name_for_comment(xml_step):
-    """Expected PDF step name for a non-empty # (comment) step."""
-    text_child = next((c for c in xml_step["children"] if c["tag"] == "Text"), None)
-    text = (text_child.get("text") or "") if text_child else ""
-    return f"#{text.strip()}" if text.strip() else "#"
+def _infer_child_type(child):
+    if "state" in child["attrs"]:
+        return "boolean"
+    if "value" in child["attrs"]:
+        val = child["attrs"]["value"]
+        return "boolean" if val in ("True", "False") else "enum"
+    if any(c["tag"] == "Calculation" for c in child["children"]):
+        return "calculation"
+    if child["children"]:
+        return "object"
+    if child["text"] is not None:
+        return "text"
+    # Elements with both @id and @name are named FM object references (Script, Layout, Field, etc.)
+    if "id" in child["attrs"] and "name" in child["attrs"]:
+        return "reference"
+    return "unknown"
 
-
-def _steps_match(xml_step, pdf_step):
-    """Return (confidence, notes) for a candidate pair."""
-    xml_name = normalize_name(xml_step["name"])
-    pdf_name = normalize_name(pdf_step["name"])
-
-    if xml_step["id"] == 89:
-        expected = normalize_name(_pdf_name_for_comment(xml_step))
-        if pdf_name == expected or pdf_name.startswith("#"):
-            return 1.0, []
-        return 0.5, [f"Comment name mismatch: expected {expected!r}, got {pdf_name!r}"]
-
-    if xml_name == pdf_name:
-        return 1.0, []
-
-    return 0.5, [f"Name mismatch: xml={xml_name!r} pdf={pdf_name!r}"]
-
-# ── Sequential matching ───────────────────────────────────────────────────────
-
-def match_steps(xml_steps, pdf_steps):
-    """
-    Walk both lists in parallel by position (sequential matching).
-
-    Empty # (comment) steps are skipped in the PDF — they create visual
-    spacing but produce no printed line. Steps with no PDF counterpart
-    (e.g. PDF truncated before XML ends) receive confidence 0.0.
-    """
-    matches = []
-    pdf_idx = 0
-    for xml_step in xml_steps:
-        if _is_empty_comment(xml_step):
-            matches.append({
-                "xml": xml_step,
-                "printed": None,
-                "confidence": 0.9,
-                "notes": ["Empty comment step — not rendered in printed PDF"],
-            })
-            continue
-
-        if pdf_idx >= len(pdf_steps):
-            matches.append({
-                "xml": xml_step,
-                "printed": None,
-                "confidence": 0.0,
-                "notes": ["No corresponding printed step — PDF may be truncated"],
-            })
-            continue
-
-        pdf_step = pdf_steps[pdf_idx]
-        confidence, notes = _steps_match(xml_step, pdf_step)
-        matches.append({
-            "xml": xml_step,
-            "printed": pdf_step,
-            "confidence": confidence,
-            "notes": notes,
-        })
-        pdf_idx += 1
-
-    return matches
-
-# ── Value extraction ──────────────────────────────────────────────────────────
 
 def _to_typed_value(child):
     """Convert a parsed child element to a typed Python value (best-effort)."""
@@ -255,58 +119,8 @@ def _to_typed_value(child):
             result[c["tag"]] = _to_typed_value(c)
         return result
 
-# ── Script instances ──────────────────────────────────────────────────────────
-
-def build_instances(matches):
-    """Build the scriptInstances list from matched steps."""
-    instances = []
-    for match in matches:
-        xml_step = match["xml"]
-        printed = match["printed"]
-        values = {c["tag"]: _to_typed_value(c) for c in xml_step["children"]}
-        instances.append({
-            "instanceId": f"oneofeverything.step.{xml_step['index']}",
-            "stepIndex": xml_step["index"],
-            "enabled": xml_step["enable"],
-            "fmStepId": xml_step["id"],
-            "name": xml_step["name"],
-            "raw": {
-                "xml": xml_step["raw_xml"],
-                "printedLines": printed["raw_lines"] if printed else [],
-            },
-            "values": values,
-            "mapping": {
-                "matchStrategy": "sequential-name-normalized",
-                "confidence": match["confidence"],
-                "notes": match["notes"],
-            },
-        })
-    return instances
-
-# ── Step definitions ──────────────────────────────────────────────────────────
-
-def _infer_child_type(child):
-    if "state" in child["attrs"]:
-        return "boolean"
-    if "value" in child["attrs"]:
-        val = child["attrs"]["value"]
-        return "boolean" if val in ("True", "False") else "enum"
-    if any(c["tag"] == "Calculation" for c in child["children"]):
-        return "calculation"
-    if child["children"]:
-        return "object"
-    if child["text"] is not None:
-        return "text"
-    return "unknown"
-
-
-def _option_key(tag):
-    """Lowercase first letter of an XML tag to get a camelCase option key."""
-    return tag[0].lower() + tag[1:] if tag else tag
-
 
 def _rebuild_child_xml(child):
-    """Reconstruct a compact XML string for a child element."""
     tag = child["tag"]
     attrs_str = "".join(f' {k}="{v}"' for k, v in child["attrs"].items())
     if not child["children"] and child["text"] is None:
@@ -316,7 +130,7 @@ def _rebuild_child_xml(child):
 
 
 def _build_xml_template(xml_step):
-    """Build a template string with {{placeholder}} variables for simple attrs."""
+    """Build a template string with {{placeholder}} slots for simple option attrs."""
     parts = []
     for child in xml_step["children"]:
         tag = child["tag"]
@@ -333,7 +147,7 @@ def _build_xml_template(xml_step):
 
 
 def _union_children(all_children_lists):
-    """Return one child schema per unique tag name (union across instances)."""
+    """Return one representative child per unique tag name (union across instances)."""
     seen = {}
     for children in all_children_lists:
         for child in children:
@@ -342,97 +156,237 @@ def _union_children(all_children_lists):
     return list(seen.values())
 
 
-def _gather_enum_values(step_matches, tag):
-    values = set()
-    for m in step_matches:
-        for c in m["xml"]["children"]:
-            if c["tag"] == tag and "value" in c["attrs"]:
-                values.add(c["attrs"]["value"])
-    return sorted(values)
+# ── Display map ───────────────────────────────────────────────────────────────
+
+def load_display_map(path):
+    """Load display_map.yaml; return dict keyed by stepId (int)."""
+    if not path.exists():
+        return {}
+    with open(path, encoding="utf-8") as f:
+        entries = yaml.safe_load(f) or []
+    return {
+        e["stepId"]: e
+        for e in entries
+        if isinstance(e, dict) and "stepId" in e
+    }
 
 
-def _build_option(child, step_matches):
+def _stub_option_entry(child, ctype, enum_values=None):
+    """Build a stub display_map option entry from a parsed XML child."""
     tag = child["tag"]
     key = _option_key(tag)
+    if ctype == "boolean":
+        xml_path = f"{tag}/@state" if "state" in child["attrs"] else f"{tag}/@value"
+        return {
+            "xmlPath": xml_path,
+            "key": key,
+            "type": "boolean",
+            "label": None,
+            "displayLocation": None,
+            "omitWhenFalse": None,
+            "trueText": None,
+            "falseText": None,
+        }
+    elif ctype == "enum":
+        return {
+            "xmlPath": f"{tag}/@value",
+            "key": key,
+            "type": "enum",
+            "label": None,
+            "displayLocation": None,
+            "allowedValues": [
+                {"xmlValue": v, "displayText": None}
+                for v in (enum_values or [])
+            ],
+        }
+    elif ctype == "calculation":
+        return {
+            "xmlPath": f"{tag}/Calculation",
+            "key": key,
+            "type": "calculation",
+            "label": None,
+            "displayLocation": None,
+        }
+    elif ctype == "text":
+        return {
+            "xmlPath": f"{tag}/text()",
+            "key": key,
+            "type": "text",
+            "label": None,
+            "displayLocation": None,
+        }
+    elif ctype == "reference":
+        return {
+            "xmlPath": f"{tag}/@name",
+            "key": key,
+            "type": "reference",
+            "label": None,
+            "displayLocation": None,
+        }
+    else:
+        return {
+            "xmlPath": tag,
+            "key": key,
+            "type": ctype,
+            "label": None,
+            "displayLocation": None,
+        }
+
+
+def generate_display_map_stubs(definitions_by_id, all_steps_by_id, existing_map):
+    """Return new stub entries for step IDs not yet in existing_map."""
+    stubs = []
+    for step_id in sorted(definitions_by_id.keys()):
+        if step_id in existing_map:
+            continue
+        defn = definitions_by_id[step_id]
+        step_list = all_steps_by_id.get(step_id, [])
+        option_stubs = []
+        for child in defn["_union_children"]:
+            ctype = _infer_child_type(child)
+            tag = child["tag"]
+            enum_values = None
+            if ctype == "enum":
+                enum_values = sorted({
+                    c["attrs"]["value"]
+                    for step in step_list
+                    for c in step["children"]
+                    if c["tag"] == tag and "value" in c["attrs"]
+                })
+            option_stubs.append(_stub_option_entry(child, ctype, enum_values))
+        stubs.append({
+            "stepId": step_id,
+            "stepName": defn["names"]["xml"],
+            "displayName": None,
+            "options": option_stubs,
+        })
+    return stubs
+
+
+# ── Step definitions ──────────────────────────────────────────────────────────
+
+def _find_dm_opt(map_entry, tag):
+    """Return the display_map option entry matching this XML tag, or None."""
+    if not map_entry:
+        return None
+    for o in (map_entry.get("options") or []):
+        xml_path = o.get("xmlPath", "")
+        if xml_path.split("/")[0] == tag:
+            return o
+    return None
+
+
+def _build_option(child, map_entry, enum_values=None):
+    """Build an option dict merging XML-inferred schema with display_map data."""
+    tag = child["tag"]
     ctype = _infer_child_type(child)
+
+    dm_opt = _find_dm_opt(map_entry, tag)
+
+    # Prefer the semantic key from display_map; fall back to XML-tag-derived key
+    key = (dm_opt or {}).get("key") or _option_key(tag)
+    label = (dm_opt or {}).get("label") or tag
+    display_location = (dm_opt or {}).get("displayLocation")
 
     opt = {
         "key": key,
-        "label": tag,
+        "label": label,
         "type": ctype,
         "source": {},
         "display": {
-            "location": "unknown",
-            "inferenceConfidence": "low",
+            "location": display_location or "unknown",
         },
     }
 
-    if ctype == "boolean" and "state" in child["attrs"]:
-        opt["source"]["xmlPath"] = f"{tag}/@state"
+    if ctype == "boolean":
+        xml_path = f"{tag}/@state" if "state" in child["attrs"] else f"{tag}/@value"
+        opt["source"]["xmlPath"] = xml_path
         opt["allowedValues"] = [True, False]
         opt["default"] = False
-    elif ctype == "boolean" and "value" in child["attrs"]:
-        opt["source"]["xmlPath"] = f"{tag}/@value"
-        opt["allowedValues"] = [True, False]
+        if dm_opt:
+            if dm_opt.get("trueText") is not None:
+                opt["display"]["trueText"] = dm_opt["trueText"]
+            if dm_opt.get("falseText") is not None:
+                opt["display"]["falseText"] = dm_opt["falseText"]
+            if dm_opt.get("omitWhenFalse") is not None:
+                opt["display"]["omitWhenFalse"] = dm_opt["omitWhenFalse"]
     elif ctype == "enum":
         opt["source"]["xmlPath"] = f"{tag}/@value"
-        opt["allowedValues"] = _gather_enum_values(step_matches, tag)
+        if dm_opt and dm_opt.get("allowedValues"):
+            opt["allowedValues"] = dm_opt["allowedValues"]
+        elif enum_values:
+            opt["allowedValues"] = enum_values
     elif ctype == "text":
         opt["source"]["xmlPath"] = f"{tag}/text()"
     elif ctype == "calculation":
         opt["source"]["xmlPath"] = f"{tag}/Calculation"
     elif ctype == "object":
         opt["source"]["xmlPath"] = tag
+    elif ctype == "reference":
+        opt["source"]["xmlPath"] = f"{tag}/@name"
 
     return opt
 
 
-def build_definitions(matches):
-    """Build stepDefinitions by grouping matched steps by fmStepId."""
-    by_id = defaultdict(list)
-    for m in matches:
-        by_id[m["xml"]["id"]].append(m)
+def build_definitions(all_steps_by_id, display_map):
+    """Group steps by fmStepId and build one definition per unique step type.
 
+    Returns (definitions_list, definitions_by_id).
+    definitions_by_id entries carry an internal '_union_children' key used
+    by generate_display_map_stubs; it is stripped before JSON output.
+    """
     definitions = []
-    for step_id, step_matches in sorted(by_id.items()):
-        xml_step = step_matches[0]["xml"]
-        canonical_name = normalize_name(xml_step["name"])
+    definitions_by_id = {}
+
+    for step_id in sorted(all_steps_by_id.keys()):
+        step_list = all_steps_by_id[step_id]
+        representative = step_list[0]
+        canonical_name = normalize_name(representative["name"])
         step_key = slugify(canonical_name) or f"step-{step_id}"
 
-        children = _union_children([m["xml"]["children"] for m in step_matches])
-        printed_steps = [m["printed"] for m in step_matches if m["printed"] is not None]
+        union_children = _union_children([s["children"] for s in step_list])
 
-        observed_xmls = [{"xml": m["xml"]["raw_xml"]} for m in step_matches[:3]]
-        observed_printed = []
-        for ps in printed_steps:
-            observed_printed.extend(ps["raw_lines"])
-
-        printed_name = normalize_name(printed_steps[0]["name"]) if printed_steps else None
-
-        # Display parts — structured breakdown of the first observed printed step
-        display_parts = []
-        if printed_steps:
-            ps = printed_steps[0]
-            display_parts.append({"type": "stepName", "value": canonical_name})
-            if ps["inline_options"] is not None:
-                display_parts.append({
-                    "type": "inlineOptions",
-                    "brackets": True,
-                    "value": ps["inline_options"],
-                })
-            for cl in ps["continuation_lines"]:
-                display_parts.append({
-                    "type": "continuationOptions",
-                    "brackets": True,
-                    "value": cl,
+        enum_values_by_tag = {}
+        for child in union_children:
+            if _infer_child_type(child) == "enum":
+                enum_values_by_tag[child["tag"]] = sorted({
+                    c["attrs"]["value"]
+                    for step in step_list
+                    for c in step["children"]
+                    if c["tag"] == child["tag"] and "value" in c["attrs"]
                 })
 
-        definitions.append({
+        map_entry = display_map.get(step_id)
+        display_name = (map_entry or {}).get("displayName") or None
+
+        observed_xmls = [{"xml": s["raw_xml"]} for s in step_list[:3]]
+
+        options = [
+            _build_option(c, map_entry, enum_values_by_tag.get(c["tag"]))
+            for c in union_children
+        ]
+
+        # Build display.parts from options with known displayLocations
+        parts = [{"type": "stepName", "value": display_name or canonical_name}]
+        inline_items = [
+            {"optionKey": o["key"], "label": o["label"]}
+            for o in options if o["display"].get("location") == "inline"
+        ]
+        cont_items = [
+            {"optionKey": o["key"], "label": o["label"]}
+            for o in options if o["display"].get("location") == "continuation"
+        ]
+        if inline_items:
+            parts.append({"type": "inlineOptions", "brackets": True, "items": inline_items})
+        if cont_items:
+            parts.append({"type": "continuationOptions", "brackets": True, "items": cont_items})
+
+        defn = {
             "stepKey": step_key,
             "fmStepId": step_id,
             "names": {
-                "xml": xml_step["name"],
-                "printed": printed_name,
+                "xml": representative["name"],
+                "display": display_name,
                 "canonical": canonical_name,
                 "aliases": [],
             },
@@ -448,7 +402,7 @@ def build_definitions(matches):
                     "id": {"type": "integer", "xmlAttribute": "@id"},
                     "name": {"type": "string", "xmlAttribute": "@name"},
                 },
-                "template": _build_xml_template(xml_step),
+                "template": _build_xml_template(representative),
                 "children": [
                     {
                         "path": c["tag"],
@@ -459,37 +413,72 @@ def build_definitions(matches):
                         "hasText": c["text"] is not None,
                         "hasChildren": bool(c["children"]),
                     }
-                    for c in children
+                    for c in union_children
                 ],
                 "observedExamples": observed_xmls,
             },
             "display": {
-                "printedTemplate": None,
-                "parts": display_parts,
-                "observedPrinted": observed_printed,
+                "displayName": display_name,
+                "parts": parts,
             },
-            "options": [_build_option(c, step_matches) for c in children],
+            "options": options,
             "parameters": [],
             "validation": {
                 "requiredOptions": [],
                 "mutuallyExclusive": [],
                 "dependencies": [],
             },
-            "mapping": {
-                "matchStrategy": "sequential-name-normalized",
-                "confidence": min(m["confidence"] for m in step_matches),
-                "instanceCount": len(step_matches),
-                "notes": [],
-            },
             "notes": [],
-        })
+            "_union_children": union_children,
+        }
 
-    return definitions
+        definitions.append(defn)
+        definitions_by_id[step_id] = defn
+
+    return definitions, definitions_by_id
+
+
+# ── Script instances ──────────────────────────────────────────────────────────
+
+def build_instances(scripts, definitions_by_id):
+    """Build one instance record per step occurrence across all parsed scripts."""
+    instances = []
+    for script in scripts:
+        script_slug = slugify(script["scriptName"]) or "script"
+        for step in script["steps"]:
+            defn = definitions_by_id.get(step["id"])
+            # Map tag → option key so instance values align with definition option keys
+            tag_to_key = {}
+            if defn:
+                for opt in defn["options"]:
+                    src_path = opt.get("source", {}).get("xmlPath", "")
+                    src_tag = src_path.split("/")[0] if src_path else ""
+                    if src_tag:
+                        tag_to_key[src_tag] = opt["key"]
+            values = {
+                tag_to_key.get(c["tag"], _option_key(c["tag"])): _to_typed_value(c)
+                for c in step["children"]
+            }
+            instances.append({
+                "instanceId": f"{script_slug}.step.{step['index']}",
+                "scriptName": script["scriptName"],
+                "stepIndex": step["index"],
+                "enabled": step["enable"],
+                "fmStepId": step["id"],
+                "name": step["name"],
+                "definitionKey": defn["stepKey"] if defn else None,
+                "raw": {"xml": step["raw_xml"]},
+                "values": values,
+            })
+    return instances
+
 
 # ── Output ────────────────────────────────────────────────────────────────────
 
-def emit_output(definitions, instances, xml_steps, pdf_steps):
+def emit_output(definitions, instances, scripts):
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    clean_defs = [{k: v for k, v in d.items() if not k.startswith("_")} for d in definitions]
+    total_steps = sum(len(s["steps"]) for s in scripts)
     payload = {
         "schemaVersion": "fm-script-step-inventory/v1",
         "fileMaker": {
@@ -502,65 +491,78 @@ def emit_output(definitions, instances, xml_steps, pdf_steps):
             "xml": {
                 "type": "clipboard-fmxmlsnippet",
                 "file": str(XML_PATH.relative_to(BASE_DIR)),
-                "stepCount": len(xml_steps),
-            },
-            "printed": {
-                "type": "script-print-pdf",
-                "file": str(PDF_PATH.relative_to(BASE_DIR)),
-                "stepCount": len(pdf_steps),
+                "scriptCount": len(scripts),
+                "stepCount": total_steps,
             },
         },
-        "stepDefinitions": definitions,
+        "stepDefinitions": clean_defs,
         "scriptInstances": instances,
     }
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
     return OUTPUT_PATH
 
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    gen_stubs = "--gen-stubs" in sys.argv
+
     print("Parsing XML …")
-    xml_steps = parse_xml_steps(XML_PATH)
-    print(f"  {len(xml_steps)} steps")
+    scripts = parse_xml_steps(XML_PATH)
+    total_steps = sum(len(s["steps"]) for s in scripts)
+    print(f"  {len(scripts)} script(s), {total_steps} total steps")
 
-    print("Extracting PDF text …")
-    pdf_lines = extract_pdf_lines(PDF_PATH)
-    pdf_steps = parse_pdf_steps(pdf_lines)
-    print(f"  {len(pdf_steps)} printed steps")
+    all_steps_by_id = defaultdict(list)
+    for script in scripts:
+        for step in script["steps"]:
+            all_steps_by_id[step["id"]].append(step)
+    print(f"  {len(all_steps_by_id)} unique step types")
 
-    print("Matching …")
-    matches = match_steps(xml_steps, pdf_steps)
-
-    conf_bins: dict[str, int] = defaultdict(int)
-    for m in matches:
-        c = m["confidence"]
-        label = "1.0" if c == 1.0 else ("0.9" if c >= 0.9 else ("0.5" if c >= 0.5 else "0.0"))
-        conf_bins[label] += 1
-    print(f"  Confidence distribution: {dict(sorted(conf_bins.items(), reverse=True))}")
-
-    low = [m for m in matches if 0.0 < m["confidence"] < 1.0 and m["printed"] is not None]
-    if low:
-        print("  Low-confidence matches:")
-        for m in low:
-            print(f"    [{m['confidence']}] {m['xml']['name']!r}: {m['notes']}")
-
-    no_pdf = [m for m in matches if m["printed"] is None and m["confidence"] == 0.0]
-    if no_pdf:
-        print(f"  {len(no_pdf)} XML steps have no printed counterpart (PDF truncated):")
-        for m in no_pdf:
-            print(f"    {m['xml']['name']!r}")
+    print("Loading display map …")
+    display_map = load_display_map(DISPLAY_MAP_PATH)
+    mapped = sum(1 for sid in all_steps_by_id if sid in display_map)
+    print(f"  {mapped}/{len(all_steps_by_id)} step types have display map entries")
 
     print("Building definitions …")
-    definitions = build_definitions(matches)
-    print(f"  {len(definitions)} unique step types")
+    definitions, definitions_by_id = build_definitions(dict(all_steps_by_id), display_map)
+
+    if gen_stubs:
+        print("Generating display_map.yaml stubs …")
+        stubs = generate_display_map_stubs(
+            definitions_by_id, dict(all_steps_by_id), display_map
+        )
+        if stubs:
+            mode = "a" if DISPLAY_MAP_PATH.exists() and DISPLAY_MAP_PATH.stat().st_size > 0 else "w"
+            with open(DISPLAY_MAP_PATH, mode, encoding="utf-8") as f:
+                if mode == "a":
+                    f.write("\n")
+                yaml.dump(
+                    stubs, f,
+                    allow_unicode=True,
+                    default_flow_style=False,
+                    sort_keys=False,
+                )
+            print(f"  Wrote {len(stubs)} stubs → {DISPLAY_MAP_PATH.name}")
+        else:
+            print("  All steps already mapped — nothing to stub")
+        return
 
     print("Building instances …")
-    instances = build_instances(matches)
+    instances = build_instances(scripts, definitions_by_id)
 
     print("Writing output …")
-    out = emit_output(definitions, instances, xml_steps, pdf_steps)
+    out = emit_output(definitions, instances, scripts)
     print(f"  → {out}")
+
+    unknown_count = sum(
+        1 for d in definitions
+        for o in d["options"]
+        if o["display"].get("location") == "unknown"
+    )
+    if unknown_count:
+        print(f"\n  {unknown_count} option(s) still have unknown display location.")
+        print("  Run --gen-stubs to scaffold display_map.yaml entries.")
 
 
 if __name__ == "__main__":
