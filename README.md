@@ -13,6 +13,8 @@ These two representations do not carry the same information. The XML contains op
 
 The output is intended to be used as a **lookup map** by a consumer system that parses arbitrary FileMaker scripts and renders them in a display UI.
 
+For rendering ` ```filemaker-script ` fenced markdown into that display UI (parser, `highlight.js` language definition, and stylesheet), use [`fmscriptui`](https://github.com/Blue-Kachina/fmscriptui) rather than vendoring a copy here.
+
 ## Inputs
 
 | File | Required | Purpose |
