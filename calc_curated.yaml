@@ -1,0 +1,183 @@
+# Hand-curated facts for the calculation catalogue (section 10.7 step 4 of database_structure_brainstorming.md).
+# Applied by `python3 calc_catalogue.py curate` (and automatically before every export).
+#
+# What belongs here: facts help.claris.com does not give in a structured form (operator precedence,
+# syntax rules, constant values), and corrections for functions the signature parser cannot read
+# (`calc_catalogue.py report` lists them). Every entry should be checkable against its helpUrl.
+# Licensing: `summary` and error labels are our own words, never help text (FMCuttingBoard's contract).
+
+# documentedFileMakerVersion: "22.0"   # default: newest originated-in version among functions / Get constants
+
+# ── operators ────────────────────────────────────────────────────────────────
+# Higher precedence binds tighter. Checked on every curate against help's "Order of evaluation" list
+# (operators-in-formulas.html): NOT; ^; * /; + -; &; = ≠ > < ≥ ≤; AND; OR XOR.
+# Seeded from FMCuttingBoard's shared/data/calc-language.json, which uses the same numbering.
+operators:
+  - { symbol: "not", name: logical not, kind: logical, arity: 1, precedence: 8, associativity: right, helpUrl: https://help.claris.com/en/pro-help/content/logical-operators.html }
+  - { symbol: "^", name: power, kind: arithmetic, arity: 2, precedence: 7, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/mathematical-operators.html }
+  - { symbol: "*", name: multiplication, kind: arithmetic, arity: 2, precedence: 6, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/mathematical-operators.html }
+  - { symbol: "/", name: division, kind: arithmetic, arity: 2, precedence: 6, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/mathematical-operators.html }
+  - { symbol: "+", name: addition, kind: arithmetic, arity: 2, precedence: 5, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/mathematical-operators.html }
+  - { symbol: "-", name: subtraction, kind: arithmetic, arity: 2, precedence: 5, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/mathematical-operators.html }
+  - { symbol: "&", name: concatenation, kind: text, arity: 2, precedence: 4, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/text-operators.html }
+  - { symbol: "=", name: equal, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: "≠", alternates: ["<>"], name: not equal, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: ">", name: greater than, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: "<", name: less than, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: "≥", alternates: [">="], name: greater than or equal, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: "≤", alternates: ["<="], name: less than or equal, kind: comparison, arity: 2, precedence: 3, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/comparison-operators.html }
+  - { symbol: "and", name: logical and, kind: logical, arity: 2, precedence: 2, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/logical-operators.html }
+  - { symbol: "or", name: logical or, kind: logical, arity: 2, precedence: 1, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/logical-operators.html }
+  - { symbol: "xor", name: logical exclusive or, kind: logical, arity: 2, precedence: 1, associativity: left, helpUrl: https://help.claris.com/en/pro-help/content/logical-operators.html }
+
+# ── syntax ───────────────────────────────────────────────────────────────────
+# Exported as-is under `syntax`; keys follow fm-calc-catalogue/v1.
+# Sources: text-constants-special-characters.html, adding-comments.html, using-variables.html,
+# contents-of-repetition.html, text-operators.html (${ } quoting).
+syntax:
+  argumentSeparator: ";"
+  stringDelimiter: "\""
+  stringEscapes:
+    - { sequence: "\\\"", meaning: a quotation mark inside a text constant }
+    - { sequence: "\\\\", meaning: a backslash inside a text constant }
+    - { sequence: "\\¶", meaning: a literal pilcrow instead of a return }
+  paragraphMark: "¶"
+  lineComment: "//"
+  blockComment: ["/*", "*/"]
+  fieldReference: "Table::Field"
+  repetitionBrackets: ["[", "]"]
+  variablePrefixes:
+    - { prefix: "$$", scope: file (global) }
+    - { prefix: "$", scope: script (local) }
+  caseSensitive: { functionNames: false }
+  notes:
+    - "Operator precedence follows help.claris.com/en/pro-help/content/operators-in-formulas.html (higher number binds tighter)."
+    - "${ } quotes reserved function names and keywords used as field or table names (text-operators.html)."
+
+# ── named constants ──────────────────────────────────────────────────────────
+# Names and groups come from named-constants-keywords.html; only values and links are curated here.
+constants:
+  - { name: "True", value: 1 }
+  - { name: "False", value: 0 }
+  - { name: JSONRaw, value: 0, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONString, value: 1, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONNumber, value: 2, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONObject, value: 3, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONArray, value: 4, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONBoolean, value: 5, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+  - { name: JSONNull, value: 6, lifecycle: { since: "16.0" }, helpUrl: https://help.claris.com/en/pro-help/content/jsonsetelement.html }
+
+# ── functions ────────────────────────────────────────────────────────────────
+# Keyed by exact name. Keys (all optional): reason, signature, category, returnType, minArgs, maxArgs,
+# lifecycle {since, sinceRaw}, parameters (full replacement: name, type, optional, repeatable, group,
+# allowedConstants), parameterTypes {param: type} (corrects inferred types only), allowedConstants
+# {param: [names] | {group: key}}, summary (our words, <= 300 chars), helpPage (for entries not on the help site).
+functions:
+  Get:
+    reason: Not a page of its own; each Get ( name ) argument is a getConstants entry.
+    signature: Get ( name )
+    category: get
+    returnType: any
+    minArgs: 1
+    maxArgs: 1
+    lifecycle: { since: "6.0", sinceRaw: "6.0 or earlier" }
+    helpPage: get-functions.html
+    parameters:
+      - { name: name, type: any }
+
+  # The signature parser flags these (`calc_catalogue.py report`); argument counts are from the Format
+  # line plus the page's Description. Still to be confirmed by IsValidExpression (step 6).
+  ComputeModel:
+    reason: Help gives two Format lines (general and vision models); numbered names repeat as name/value pairs.
+    signature: ComputeModel ( modelName ; parameterName1 ; value1 { ; parameterName2 ; value2 ; ... } )
+    minArgs: 3
+    maxArgs: null
+    parameters:
+      - { name: modelName, type: text }
+      - { name: parameterName, type: text, repeatable: true, group: parameter }
+      - { name: value, type: any, repeatable: true, group: parameter }
+  Evaluate:
+    reason: The optional second argument is one bracketed list of trigger fields.
+    minArgs: 1
+    maxArgs: 2
+    parameters:
+      - { name: expression, type: expression }
+      - { name: fields, type: any, optional: true }
+  Extend:
+    reason: Help's parameter name contains a hyphen (non-repeatingField).
+    minArgs: 1
+    maxArgs: 1
+    parameters:
+      - { name: nonRepeatingField, type: fieldReference }
+  Let:
+    reason: The [ var = expression ; ... ] bindings block is one argument.
+    minArgs: 2
+    maxArgs: 2
+    parameters:
+      - { name: bindings, type: variableBindings }
+      - { name: calculation, type: any }
+  LookupNext:
+    reason: Help's parameter name contains a slash (lower/higherFlag).
+    minArgs: 2
+    maxArgs: 2
+    parameters:
+      - { name: sourceField, type: fieldReference }
+      - { name: lowerOrHigherFlag, type: any, allowedConstants: [Lower, Higher] }
+  TextColor:
+    reason: The colour argument is written as a nested RGB ( red ; green ; blue ) call.
+    minArgs: 2
+    maxArgs: 2
+    parameters:
+      - { name: text, type: text }
+      - { name: rgb, type: number }
+  TextColorRemove:
+    reason: The colour argument is written as a nested RGB ( red ; green ; blue ) call.
+    minArgs: 1
+    maxArgs: 2
+    parameters:
+      - { name: text, type: text }
+      - { name: rgb, type: number, optional: true }
+  While:
+    reason: The [ ] blocks are variable bindings, each one argument.
+    minArgs: 4
+    maxArgs: 4
+    parameters:
+      - { name: initialVariable, type: variableBindings }
+      - { name: condition, type: boolean }
+      - { name: logic, type: variableBindings }
+      - { name: result, type: any }
+  WindowNames:
+    reason: The whole argument list is optional (WindowNames {( fileName )}).
+    signature: WindowNames { ( fileName ) }
+    minArgs: 0
+    maxArgs: 1
+    parameters:
+      - { name: fileName, type: text, optional: true }
+
+  # Parsed without complaint, but help's Format line shows only one of several accepted forms.
+  JSONSetElement:
+    reason: Description allows several key/value/type triples (bracketed); matches FMCuttingBoard's contract example.
+    minArgs: 4
+    maxArgs: null
+    parameters:
+      - { name: json, type: json }
+      - { name: keyOrIndexOrPath, type: text, repeatable: true, group: element }
+      - { name: value, type: any, repeatable: true, group: element }
+      - { name: type, type: number, repeatable: true, group: element,
+          allowedConstants: [JSONRaw, JSONString, JSONNumber, JSONObject, JSONArray, JSONBoolean, JSONNull] }
+
+  # Type corrections and constant links (help's Notes column on named-constants-keywords.html).
+  Case:
+    parameterTypes: { test: boolean }
+  If:
+    parameterTypes: { test: boolean }
+  TextStyleAdd:
+    allowedConstants: { styles: { group: text-style } }
+  TextStyleRemove:
+    allowedConstants: { styles: { group: text-style } }
+  ConvertFromFileMakerPath:
+    allowedConstants: { format: { group: path-type } }
+  ConvertToFileMakerPath:
+    allowedConstants: { format: { group: path-type } }
+  GetRecordIDsFromFoundSet:
+    allowedConstants: { type: [JSONString, JSONNumber, JSONStringRanges, ValueNumber, ValueNumberRanges] }

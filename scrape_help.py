@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 """
-Scrape the FileMaker Pro script-step help pages into catalogue.sqlite.
+Scrape the FileMaker Pro help pages (script steps and calculations) into catalogue.sqlite.
 
 Two stages, so parsing can be re-run without re-fetching:
 
-    python3 scrape_help.py fetch  [--locale en] [--delay 1.0] [--refresh] [--limit N]
-    python3 scrape_help.py parse  [--locale en]
+    python3 scrape_help.py fetch  [--scope all|steps|calc] [--locale en] [--delay 1.0] [--refresh] [--limit N]
+    python3 scrape_help.py parse  [--scope all|steps|calc] [--locale en]
     python3 scrape_help.py status
 
-fetch  crawls the "Script steps reference" page, each category page it links to, and every
-       step page those list, storing the raw HTML in help_pages (history is kept).
-parse  fills script_step_categories, script_steps, localizations, sections, examples and
-       compatibility from the newest fetch of each page. Idempotent.
+fetch  steps: crawls the "Script steps reference" page, each category page it links to, and every
+              step page those list.
+       calc:  crawls the "Functions reference" page, its category pages and every function and
+              Get function page they list, plus the named constants, error codes and operators pages.
+       Raw HTML is stored in help_pages (history is kept).
+parse  fills the step tables (script_step_*) and the calculation tables (functions, get_constants,
+       calc_constants, error_codes, ...) from the newest fetch of each page. Idempotent.
+       Curated facts (calc_curated.yaml) are applied separately by calc_catalogue.py.
 
-Standard library only. See database_structure_brainstorming.md for the schema plan.
+Standard library only. See database_structure_brainstorming.md for the schema plan (sections 9 and 10).
 """
 
 import argparse
@@ -24,6 +28,8 @@ import sqlite3
 import sys
 import time
 import urllib.error
+
+import fm_signature
 import urllib.request
 from datetime import datetime, timezone
 from html.parser import HTMLParser
@@ -40,6 +46,15 @@ USER_AGENT = "fmscriptinventory-scraper/0.1 (personal research; matthew.leering@
 CATEGORY_HREF = re.compile(r'<a href="([a-z0-9-]+)-script-steps\.html"[^>]*>([^<]+)<')
 # A category page lists steps as table rows: <td><p><a href="slug.html">Name</a></p></td><td><p>Purpose</p></td>
 STEP_ROW = re.compile(r'<td[^>]*>\s*<p><a href="([a-z0-9-]+)\.html">([^<]+)</a></p>')
+
+FUNCTIONS_PAGE = "functions-reference.html"
+GET_CATEGORY = "get-functions"
+# Single calculation-language pages: page -> help_pages.kind
+CALC_PAGES = {
+    "named-constants-keywords.html": "named-constants",
+    "error-codes.html": "error-codes",
+    "operators-in-formulas.html": "operators",
+}
 
 
 # ── database ──────────────────────────────────────────────────────────────────
@@ -123,22 +138,57 @@ def discover_steps(category_html):
     return [(slug, html.unescape(name).strip()) for slug, name in STEP_ROW.findall(main)]
 
 
-def cmd_fetch(args):
-    conn = connect()
-    fetcher = Fetcher(conn, args.locale, args.delay, args.refresh)
+def discover_function_categories(reference_html):
+    """Category pages of the functions reference, in order. The page's own mini-TOC is filled in by
+    JavaScript, so they come from the navigation tree: the <ul> under the selected "Functions reference" node."""
+    start = reference_html.find('class="selected">Functions reference')
+    if start == -1:
+        return []
+    block = reference_html[start: reference_html.find("</ul>", start)]
+    return [(slug, html.unescape(name).strip())
+            for slug, name in re.findall(r'<a href="([a-z0-9-]+)\.html"[^>]*>([^<]+)<', block)]
+
+
+def fetch_steps(fetcher, limit):
     reference = fetcher.get(REFERENCE_PAGE, "reference")
     categories = discover_categories(reference)
-    print(f"{len(categories)} categories")
+    print(f"{len(categories)} step categories")
     step_pages = []
     for cat_slug, _ in categories:
         category_html = fetcher.get(f"{cat_slug}-script-steps.html", "category")
         steps = discover_steps(category_html)
         print(f"{cat_slug}: {len(steps)} steps")
         step_pages += [slug for slug, _ in steps]
-    if args.limit:
-        step_pages = step_pages[:args.limit]
+    if limit:
+        step_pages = step_pages[:limit]
     for slug in dict.fromkeys(step_pages):
         fetcher.get(f"{slug}.html", "step")
+
+
+def fetch_calc(fetcher, limit):
+    reference = fetcher.get(FUNCTIONS_PAGE, "function-reference")
+    categories = discover_function_categories(reference)
+    print(f"{len(categories)} function categories")
+    pages = {}
+    for cat_slug, _ in categories:
+        category_html = fetcher.get(f"{cat_slug}.html", "function-category")
+        functions = discover_steps(category_html)  # same table layout as the step category pages
+        print(f"{cat_slug}: {len(functions)} functions")
+        for slug, _ in functions:
+            pages.setdefault(slug, "get-function" if cat_slug == GET_CATEGORY else "function")
+    for page, kind in CALC_PAGES.items():
+        fetcher.get(page, kind)
+    for slug, kind in list(pages.items())[:limit or None]:
+        fetcher.get(f"{slug}.html", kind)
+
+
+def cmd_fetch(args):
+    conn = connect()
+    fetcher = Fetcher(conn, args.locale, args.delay, args.refresh)
+    if args.scope in ("all", "steps"):
+        fetch_steps(fetcher, args.limit)
+    if args.scope in ("all", "calc"):
+        fetch_calc(fetcher, args.limit)
     print(f"done; {fetcher.fetched} pages fetched from the network")
 
 
@@ -218,10 +268,10 @@ def get_or_create_version(conn, raw):
     return conn.execute("SELECT id FROM fm_versions WHERE version = ?", (version,)).fetchone()["id"]
 
 
-def parse_step_page(page_html):
+def parse_step_page(page_html, purpose_class="ref-purpose-script"):
     main = main_content(page_html)
     name = re.search(r"<h1[^>]*>(.*?)</h1>", main, flags=re.S)
-    purpose = re.search(r'<p class="ref-purpose-script">(.*?)</p>', main, flags=re.S)
+    purpose = re.search(rf'<p class="{purpose_class}">(.*?)</p>', main, flags=re.S)
     result = {
         "name": to_text(name.group(1)) if name else None,
         "purpose": to_text(purpose.group(1)) if purpose else None,
@@ -252,10 +302,17 @@ def parse_step_page(page_html):
 
 def cmd_parse(args):
     conn = connect()
+    if args.scope in ("all", "steps"):
+        parse_steps(conn, args)
+    if args.scope in ("all", "calc"):
+        parse_calc(conn, args)
+
+
+def parse_steps(conn, args):
     root = HELP_ROOT.format(locale=args.locale)
     reference = latest_page(conn, root + REFERENCE_PAGE)
     if not reference:
-        sys.exit("no reference page fetched yet; run `fetch` first")
+        sys.exit("no script steps reference page fetched yet; run `fetch --scope steps` first")
 
     step_category = {}
     for position, (cat_slug, _) in enumerate(discover_categories(reference["raw_html"])):
@@ -325,10 +382,231 @@ def cmd_parse(args):
           f" ({unparsed_versions} with a non-version 'originated' value)")
 
 
+# ── parse stage: calculations ─────────────────────────────────────────────────
+
+def function_category_key(slug):
+    """'text-functions' -> 'text', 'json-functions-category' -> 'json'."""
+    return re.sub(r"-functions(?:-category)?$", "", slug)
+
+
+def section_html(main, key):
+    """Raw HTML of the section under <h2 class="{key}-head">, up to the next <h2>."""
+    head = re.search(rf'<h2 class="{key}-head"[^>]*>.*?</h2>', main, flags=re.S)
+    if not head:
+        return ""
+    end = main.find("<h2", head.end())
+    return main[head.end(): end if end != -1 else None]
+
+
+def parse_function_page(page_html):
+    """A function or Get function page: the step-page fields plus Format, Parameters and Data type returned."""
+    page = parse_step_page(page_html, purpose_class="ref-purpose-func")
+    main = main_content(page_html)
+    # Usually <pre class="ref-format">, but some pages (Random) use a plain <p>
+    format_text = next((text for key, _, text in page["sections"] if key == "ref-format"), "")
+    lines = [line.strip() for line in format_text.splitlines() if line.strip()]
+    page["format"] = lines[0] if lines else None
+    page["format_extra"] = lines[1:]
+    # Parameters are paragraphs like <p><code>text</code> - any text expression</p>
+    page["params"] = []
+    for para in re.findall(r"<p>\s*(<code>.*?)</p>", section_html(main, "ref-param"), flags=re.S):
+        name = to_text(re.match(r"<code>(.*?)</code>", para, flags=re.S).group(1))
+        description = to_text(para)[len(name):].lstrip(" -–—")
+        page["params"].append((name, description))
+    page["returns"] = next((text for key, _, text in page["sections"] if key == "ref-return"), None)
+    return page
+
+
+def table_rows(main):
+    """Body rows of the tables in a page as lists of cell HTML."""
+    return [re.findall(r"<td[^>]*>(.*?)</td>", row, flags=re.S)
+            for row in re.findall(r'<tr class="[^"]*Body[^"]*">(.*?)</tr>', main, flags=re.S)]
+
+
+def replace_sections(conn, page_id, sections):
+    conn.execute("DELETE FROM calc_help_sections WHERE help_page_id = ?", (page_id,))
+    for position, (key, heading, text) in enumerate(sections):
+        conn.execute("INSERT INTO calc_help_sections VALUES (?, ?, ?, ?, ?)", (page_id, position, key, heading, text))
+
+
+def store_function(conn, locale, slug, cat_id, page_id, page, version_id):
+    sig = fm_signature.parse(page["format"] or "", expected_name=page["name"])
+    issues = list(sig.issues)
+    if not page["format"]:
+        issues.append("no Format line on the page")
+    if page["format_extra"]:
+        issues.append(f"more than one Format line: {page['format_extra']!r}")
+    return_type = fm_signature.map_return_type(page["returns"])
+    if return_type is None:
+        issues.append(f"unrecognised return type {page['returns']!r}")
+    conn.execute(
+        "INSERT INTO functions (slug, name, category_id, return_type, return_type_raw, signature, min_args, max_args,"
+        " signature_status, signature_issues, originated_in_version_id, originated_in_raw)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (slug) DO UPDATE SET name = excluded.name,"
+        " category_id = excluded.category_id, return_type = excluded.return_type,"
+        " return_type_raw = excluded.return_type_raw, signature = excluded.signature,"
+        " min_args = excluded.min_args, max_args = excluded.max_args,"
+        " signature_status = excluded.signature_status, signature_issues = excluded.signature_issues,"
+        " originated_in_version_id = excluded.originated_in_version_id,"
+        " originated_in_raw = excluded.originated_in_raw",
+        (slug, page["name"], cat_id, return_type, page["returns"], " ".join((page["format"] or "").split()),
+         sig.min_args, sig.max_args, "needs-review" if issues else "parsed", "; ".join(issues) or None,
+         version_id, page["originated"]))
+    function_id = conn.execute("SELECT id FROM functions WHERE slug = ?", (slug,)).fetchone()["id"]
+    conn.execute(
+        "INSERT INTO function_localizations (function_id, locale, purpose, help_page_id) VALUES (?, ?, ?, ?)"
+        " ON CONFLICT (function_id, locale) DO UPDATE SET purpose = excluded.purpose,"
+        " help_page_id = excluded.help_page_id",
+        (function_id, locale, page["purpose"], page_id))
+    conn.execute("DELETE FROM function_parameter_constants WHERE parameter_id IN"
+                 " (SELECT id FROM function_parameters WHERE function_id = ?)", (function_id,))
+    conn.execute("DELETE FROM function_parameters WHERE function_id = ?", (function_id,))
+    descriptions = {}
+    for name, description in page["params"]:
+        descriptions.setdefault(name, description)
+        descriptions.setdefault(fm_signature.strip_number(name), description)
+    for position, param in enumerate(sig.params):
+        description = descriptions.get(param.name)
+        conn.execute(
+            "INSERT INTO function_parameters (function_id, position, name, type, type_source, optional, repeatable,"
+            " group_key, help_description) VALUES (?, ?, ?, ?, 'inferred', ?, ?, ?, ?)",
+            (function_id, position, param.name, fm_signature.infer_param_type(description, param.name), param.optional,
+             param.repeatable, param.group, description))
+    conn.execute("DELETE FROM function_compatibility WHERE function_id = ?", (function_id,))
+    for product, supported in page["compat"]:
+        conn.execute("INSERT INTO function_compatibility VALUES (?, ?, ?)", (function_id, product, supported))
+    return not issues
+
+
+def store_get_constant(conn, locale, slug, page_id, page, version_id):
+    match = re.search(r"Get\s*\(\s*([A-Za-z0-9]+)\s*\)", page["format"] or page["name"])
+    if not match:
+        print(f"warning: {slug}: no Get ( name ) found, skipped", file=sys.stderr)
+        return
+    conn.execute(
+        "INSERT INTO get_constants (slug, name, return_type, return_type_raw, originated_in_version_id,"
+        " originated_in_raw) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (slug) DO UPDATE SET name = excluded.name,"
+        " return_type = excluded.return_type, return_type_raw = excluded.return_type_raw,"
+        " originated_in_version_id = excluded.originated_in_version_id,"
+        " originated_in_raw = excluded.originated_in_raw",
+        (slug, match.group(1), fm_signature.map_return_type(page["returns"]), page["returns"], version_id,
+         page["originated"]))
+    get_id = conn.execute("SELECT id FROM get_constants WHERE slug = ?", (slug,)).fetchone()["id"]
+    conn.execute(
+        "INSERT INTO get_constant_localizations (get_constant_id, locale, purpose, help_page_id) VALUES (?, ?, ?, ?)"
+        " ON CONFLICT (get_constant_id, locale) DO UPDATE SET purpose = excluded.purpose,"
+        " help_page_id = excluded.help_page_id",
+        (get_id, locale, page["purpose"], page_id))
+    conn.execute("DELETE FROM get_constant_compatibility WHERE get_constant_id = ?", (get_id,))
+    for product, supported in page["compat"]:
+        conn.execute("INSERT INTO get_constant_compatibility VALUES (?, ?, ?)", (get_id, product, supported))
+
+
+def parse_named_constants(conn, page):
+    count = 0
+    for cells in table_rows(main_content(page["raw_html"])):
+        if len(cells) < 2:
+            continue
+        name, group_raw = to_text(cells[0]), to_text(cells[1])
+        notes = to_text(cells[2]) if len(cells) > 2 else None
+        conn.execute(
+            "INSERT INTO calc_constants (name, group_key, group_raw, help_notes, help_page_id) VALUES (?, ?, ?, ?, ?)"
+            " ON CONFLICT (name) DO UPDATE SET group_key = excluded.group_key, group_raw = excluded.group_raw,"
+            " help_notes = excluded.help_notes, help_page_id = excluded.help_page_id",
+            (name, re.sub(r"[^a-z0-9]+", "-", group_raw.lower()).strip("-"), group_raw, notes, page["id"]))
+        count += 1
+    return count
+
+
+def parse_error_codes(conn, page):
+    count = 0
+    for cells in table_rows(main_content(page["raw_html"])):
+        code = re.match(r"-?\d+", to_text(cells[0])) if cells else None
+        if not code or len(cells) < 2:
+            continue
+        conn.execute(
+            "INSERT INTO error_codes (code, help_text, help_page_id) VALUES (?, ?, ?) ON CONFLICT (code)"
+            " DO UPDATE SET help_text = excluded.help_text, help_page_id = excluded.help_page_id",
+            (int(code.group()), to_text(cells[1]), page["id"]))
+        count += 1
+    return count
+
+
+def parse_order_of_evaluation(page_html):
+    """operators-in-formulas.html's ordered list -> [['/*', '*/', '//'], ..., ['OR', 'XOR']], tightest first."""
+    main = main_content(page_html)
+    items = re.findall(r"<li[^>]*>(.*?)</li>", main.split("Order of evaluation", 1)[-1], flags=re.S)
+    return [[s.strip() for s in re.split(r",\s+", to_text(item)) if s.strip()] for item in items]
+
+
+def parse_calc(conn, args):
+    root = HELP_ROOT.format(locale=args.locale)
+    reference = latest_page(conn, root + FUNCTIONS_PAGE)
+    if not reference:
+        sys.exit("no functions reference page fetched yet; run `fetch --scope calc` first")
+
+    page_category = {}
+    for position, (cat_slug, _) in enumerate(discover_function_categories(reference["raw_html"])):
+        page = latest_page(conn, f"{root}{cat_slug}.html")
+        if not page:
+            print(f"warning: category page {cat_slug} not fetched", file=sys.stderr)
+            continue
+        cat_name = to_text(re.search(r"<h1[^>]*>(.*?)</h1>", main_content(page["raw_html"]), flags=re.S).group(1))
+        conn.execute("INSERT INTO function_categories (slug, key, position) VALUES (?, ?, ?)"
+                     " ON CONFLICT (slug) DO UPDATE SET key = excluded.key, position = excluded.position",
+                     (cat_slug, function_category_key(cat_slug), position))
+        cat_id = conn.execute("SELECT id FROM function_categories WHERE slug = ?", (cat_slug,)).fetchone()["id"]
+        conn.execute(
+            "INSERT INTO function_category_localizations (category_id, locale, name, help_page_id) VALUES (?, ?, ?, ?)"
+            " ON CONFLICT (category_id, locale) DO UPDATE SET name = excluded.name, help_page_id = excluded.help_page_id",
+            (cat_id, args.locale, cat_name, page["id"]))
+        for slug, _ in discover_steps(page["raw_html"]):
+            if slug in page_category and page_category[slug][0] != cat_id:
+                print(f"note: {slug} is listed in more than one category; keeping the first", file=sys.stderr)
+                continue
+            page_category[slug] = (cat_id, cat_slug == GET_CATEGORY)
+
+    functions = get_constants = needs_review = missing = 0
+    for slug, (cat_id, is_get) in page_category.items():
+        page = latest_page(conn, f"{root}{slug}.html")
+        if not page:
+            missing += 1
+            continue
+        parsed = parse_function_page(page["raw_html"])
+        if not parsed["name"]:
+            print(f"warning: {slug}: no title found, skipped", file=sys.stderr)
+            continue
+        replace_sections(conn, page["id"], parsed["sections"])
+        version_id = get_or_create_version(conn, parsed["originated"] or "")
+        if is_get:
+            store_get_constant(conn, args.locale, slug, page["id"], parsed, version_id)
+            get_constants += 1
+        else:
+            needs_review += not store_function(conn, args.locale, slug, cat_id, page["id"], parsed, version_id)
+            functions += 1
+
+    extras = {}
+    for page_name, kind in CALC_PAGES.items():
+        page = latest_page(conn, root + page_name)
+        if not page:
+            print(f"warning: {page_name} not fetched", file=sys.stderr)
+        elif kind == "named-constants":
+            extras["named constants"] = parse_named_constants(conn, page)
+        elif kind == "error-codes":
+            extras["error codes"] = parse_error_codes(conn, page)
+    conn.commit()
+    if missing:
+        print(f"warning: {missing} listed function pages have not been fetched; run `fetch --scope calc`",
+              file=sys.stderr)
+    print(f"parsed {functions} functions ({needs_review} need signature review), {get_constants} Get constants, "
+          + ", ".join(f"{n} {what}" for what, n in extras.items()))
+
+
 def cmd_status(_args):
     conn = connect()
     for table in ("help_pages", "script_step_categories", "script_steps", "script_step_sections",
-                  "step_examples", "step_compatibility", "fm_versions"):
+                  "step_examples", "step_compatibility", "fm_versions", "function_categories", "functions",
+                  "function_parameters", "get_constants", "calc_constants", "calc_operators", "error_codes"):
         print(f"{table:28} {conn.execute(f'SELECT COUNT(*) FROM {table}').fetchone()[0]}")
     print("\nsteps per category:")
     for row in conn.execute(
@@ -342,12 +620,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest="command", required=True)
     fetch = sub.add_parser("fetch")
+    fetch.add_argument("--scope", choices=("all", "steps", "calc"), default="all")
     fetch.add_argument("--locale", default="en")
     fetch.add_argument("--delay", type=float, default=1.0, help="seconds between network requests")
     fetch.add_argument("--refresh", action="store_true", help="re-fetch pages we already have")
-    fetch.add_argument("--limit", type=int, help="only fetch the first N step pages (for testing)")
+    fetch.add_argument("--limit", type=int, help="only fetch the first N step / function pages (for testing)")
     fetch.set_defaults(func=cmd_fetch)
     parse = sub.add_parser("parse")
+    parse.add_argument("--scope", choices=("all", "steps", "calc"), default="all")
     parse.add_argument("--locale", default="en")
     parse.set_defaults(func=cmd_parse)
     sub.add_parser("status").set_defaults(func=cmd_status)

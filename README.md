@@ -177,6 +177,23 @@ python3 analyze.py --gen-stubs
 
 The script prints a summary: script count, step count, unique step types, display_map coverage, and a note if any options still have unknown display locations.
 
+## Calculation catalogue
+
+A second export, `export/fm-calc-catalogue.json` (format `fm-calc-catalogue/v1`), lists every FileMaker function,
+Get constant, named constant, operator and syntax rule. [FMCuttingBoard](https://github.com/Blue-Kachina/fmcuttingboard)
+owns the format and vendors the file. It is built from help.claris.com plus `calc_curated.yaml`, and it carries
+facts and links only, never help text. See section 10 of `database_structure_brainstorming.md`.
+
+```sh
+python3 scrape_help.py fetch --scope calc   # polite crawl (1 request/s) into catalogue.sqlite
+python3 scrape_help.py parse --scope calc
+python3 calc_catalogue.py report            # signatures and facts that still need a human
+python3 calc_catalogue.py export            # needs a clean, committed tree (or --allow-dirty for a preview)
+```
+
+`calc_catalogue.py` needs `pyyaml`; it validates against `schemas/fm-calc-catalogue.schema.json` when `jsonschema`
+is installed.
+
 ## Project Structure
 
 ```
@@ -188,4 +205,13 @@ output/
 docs/
   planned_shape.md    # JSON schema reference with annotated examples
 analyze.py            # main script
+scrape_help.py        # help.claris.com scraper (script steps and calculations) -> catalogue.sqlite
+fm_signature.py       # parses a function's Format line into parameters and argument counts
+calc_curated.yaml     # hand-curated calculation facts (operators, syntax, constant values, signature fixes)
+calc_catalogue.py     # curate / report / export the calculation catalogue
+migrations/           # catalogue.sqlite schema
+schemas/
+  fm-calc-catalogue.schema.json   # vendored from FMCuttingBoard
+export/
+  fm-calc-catalogue.json          # generated
 ```

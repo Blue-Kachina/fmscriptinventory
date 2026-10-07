@@ -12,7 +12,7 @@ Decisions so far (details in section 5):
 - `display_map.yaml` is a **one-time import, then retired**; `analyze.py` is also expected to be retired.
 - The canonical checked-in form of the DB is a **deterministic SQL dump** (plus `schema.sql` and migrations); the `.sqlite` file is rebuilt from it.
 - An **inventory.json-style export** is generated from the DB for sister repos (section 7); it need not match the old shape.
-- A **functions catalogue** is expected later; nothing here should block it.
+- A **calculations catalogue** (functions, Get constants, operators, syntax) is now scheduled (section 10), requested by the sister repo FMCuttingBoard; facts + links only leave this repo.
 - Step identity/aliasing is **deferred**; option ↔ XML-element mapping needs **investigation**.
 
 ---
@@ -272,7 +272,7 @@ Raw scrape of help.claris.com so help content can be re-parsed without re-fetchi
 
 UNIQUE (`url`, `fetched_at`): keep history of fetches rather than overwrite. `script_step_localizations.help_page_id` points at the fetch the parsed text came from. Worth checking help.claris.com terms of use before bulk scraping (rate-limit politely either way).
 
-### 3.12 Future: functions catalogue [decided: in scope later]
+### 3.12 Future: functions catalogue [superseded: scheduled as section 10]
 
 Not designed yet, but the schema above should not block it. Hooks that already exist:
 - `step_options.value_type = 'calculation'` marks where a calculation can appear.
@@ -431,7 +431,8 @@ Status key: **[decided]**, **[deferred]**, **[investigate]**. Original answers a
 7. **Export script** (`export_inventory`): DB -> `inventory.json` (section 7). Diff its output against the current `output/inventory.json` as the acceptance test for the importer, since the two should agree on everything the old file carried.
 8. **Help scraper** (separate script): fetch step pages into `help_pages`, then parse into `script_step_localizations`, `step_options`, `step_examples`, `step_compatibility`. Prototype on 3-4 steps first (Commit Transaction, Go to Layout, Set Variable, Perform Script).
 9. **Then retire** `display_map.yaml` and `analyze.py`.
-10. **Later:** SAXML export from `EverythingBagel.fmp12` and its table family; step identity (Q3) once a second FM version is loaded; functions catalogue (3.12; consider moving earlier, since `fmscriptui` hand-maintains its function lists).
+10. **Later:** SAXML export from `EverythingBagel.fmp12` and its table family; step identity (Q3) once a second FM version is loaded.
+11. **Calculations catalogue** (section 10, scheduled 2026-10-07 for FMCuttingBoard and `fmscriptui`): reuses the scraper and can start now, in parallel with steps 3-7.
 
 ---
 
@@ -548,10 +549,11 @@ Open questions: Which skills are we talking about (the `filemaker-dev` one, plus
 ### 8.3 Backlog ordering (suggestion)
 
 1. Finish the schema work in section 6 up to the one-shot importer (needs nothing new).
+1a. **Section 10 calculations catalogue, steps 1-5** (scraper extension, migration 0002, signature parser, curated YAML, unverified export). Moved up from last place: it has two waiting consumers (FMCuttingBoard, `fmscriptui`) and reuses the scraper. Its step 6 (verification) waits for the 8.1 rig.
 2. 8.1 EverythingBagel refinement, **in parallel** with the help scraper. It is the long pole, and it needs your hands (Windows + FileMaker), so start it early. The first useful milestone is small: pick 3-4 steps with obviously conditional options and work out the configuration scheme on those before touching all 207.
 3. Query CLI (also needed by 8.2).
 4. 8.2 skills-as-repos, once the export and CLI exist.
-5. Functions catalogue (3.12), which feeds both `fmscriptui` and the skills.
+5. ~~Functions catalogue (3.12)~~ Moved up to 1a (section 10); it also feeds the skills.
 
 ---
 
@@ -594,3 +596,165 @@ python3 scrape_help.py status   # row counts and steps per category
 2. Only locale `en`. The `--locale` flag exists, but other locales may use different URL slugs for the same step; untested.
 3. The SQL dump tooling, and the importer that fills `fm_step_id` from `script.xml`.
 
+---
+
+## 10. Calculations catalogue (functions, Get constants, operators, syntax) [steps 1-5 implemented, see 10.7a]
+
+Supersedes the "later" placement of 3.12. Requested on 2026-10-07 together with the sister repo **FMCuttingBoard**
+(github.com/Blue-Kachina/fmcuttingboard). FMCuttingBoard is a JetBrains + VS Code plugin pair that wants `.fmcalc`
+(FileMaker calculation) files to be first-class in both IDEs. That means highlighting, completion, signature
+help, hover, argument-count diagnostics and formatting, all driven by data instead of hand-kept lists.
+
+### 10.1 Consumers and what they need
+
+| Consumer | Uses | Today |
+|---|---|---|
+| FMCuttingBoard (JetBrains plugin + VS Code extension) | Every function with structured parameters and argument counts; Get constants; named constants; operators with precedence; syntax rules; versions; compatibility; help links | 22 hand-written functions in `shared/data/filemaker-functions.json`, so most real functions are flagged "unknown" |
+| `fmscriptui` | Function names by category, keywords and constants for three highlighters | Hand-maintained `src/filemaker-grammar.js` (section 7: "plainly incomplete") |
+| Claude Code skills (8.2) | Reference files for functions | Copies |
+
+The **consumer contract** is written down on FMCuttingBoard's side, because it lists what the IDEs need:
+`docs/fm-calc-catalogue-contract.md` (why each field exists) and `shared/schemas/fm-calc-catalogue.schema.json`
+(the export format `fm-calc-catalogue/v1`), plus an illustrative example in
+`shared/fixtures/calc-catalogue/example.illustrative.json`.
+
+### 10.2 Decisions [decided 2026-10-07]
+
+- **Facts + links only leave this repo.** Exports carry names, parameters, types, argument counts, categories,
+  versions, compatibility, operators, syntax rules and a `helpUrl` per entry, plus an optional short `summary`
+  written by us. No Claris help prose is redistributed (both plugins are public). Raw scraped HTML stays in
+  `help_pages` as today. This also settles the publishing side of the open terms-of-use note in 3.11; the
+  scraping side (checking help.claris.com's terms) is still worth doing.
+- **Delivery = a vendored export.** This repo writes one JSON file. FMCuttingBoard vendors it with its
+  `shared/tools/sync-calc-catalogue.mjs` (validates against the schema, rejects copied text and dirty exports),
+  so its builds never need this repo. `fmscriptui` can consume the same export (or a generated `fm-functions.js`,
+  section 7).
+- FMCuttingBoard builds its `.fmcalc` support data-driven now, so the catalogue can land incrementally. A partial
+  export (e.g. functions without verification) is already useful.
+
+### 10.3 Scope
+
+| Entity | Notes |
+|---|---|
+| Functions | Every entry on the functions reference: exact name as typed, category, return type, parameters (`optional`, `repeatable`, `group` for things like Case's test/result pairs or JSONSetElement's key/value/type triples, `allowedConstants`), `minArgs`/`maxArgs`, canonical signature line, origin/deprecated/removed versions, product compatibility (Yes/No/Partial as in 3.5), related functions |
+| Get constants | Every `Get ( … )` argument (e.g. `AccountName`), with return type, versions, compatibility |
+| Named constants | `True`/`False`, JSON types (`JSONString`, …), text styles (`Bold`, …) and other function-specific enumerations, linked to the parameters that accept them |
+| Operators | Symbol plus alternate spellings (`≠`/`<>`, `≤`/`<=`, `≥`/`>=`), word operators (`and`, `or`, `xor`, `not`), kind, arity, **precedence and associativity** |
+| Syntax rules | Argument separator, string delimiter and escapes (`\"`, `\\`, `\¶`), `¶`, comments (`//`, `/* */`), `Table::Field`, repetitions `[n]`, `$`/`$$` variables, case sensitivity |
+| Error codes | Code plus a short label we write (for hovers on `Get ( LastError ) = 401`) |
+
+Out of scope for v1: plug-in functions, custom functions (they live in user files), and localized function names
+(to confirm: calculations use English names in every locale).
+
+### 10.4 Sources [investigate]
+
+- **help.claris.com**, the same crawler pattern as section 9. Pages to locate (exact URLs to investigate): the
+  functions reference index, the category pages, one page per function, one page per Get function, the operators
+  page(s) including order of operations, and the error codes page. Store them in `help_pages` with new `kind`
+  values (`function-reference`, `function-category`, `function`, `get-function`, `operators`, `error-codes`).
+- **Function pages give the structure**: a Format/syntax line (e.g. `Left ( text ; numberOfCharacters )`, with
+  `{ }` for optional and repeated parts), Parameters, Data type returned, Originated in, Compatibility. As with
+  steps, parse raw HTML first and keep sections losslessly.
+- **`EverythingBagel.fmp12` as the verification rig (ties into 8.1):** for each function, test calls with
+  `minArgs - 1`, `minArgs`, `maxArgs` and `maxArgs + 1` arguments using `IsValidExpression` (driven by a script in
+  the file, or via ProofKit). Record the results per FileMaker version. This catches signature-parsing mistakes,
+  which help text alone can't.
+- **Operators, syntax rules and constants are few** and partly not structured in help. A small hand-curated YAML
+  (reviewed against help, with `helpUrl` provenance) is acceptable for these, unlike for functions.
+
+### 10.5 Tables [proposed]
+
+The same patterns as steps: locale tables, `fm_versions` references for lifecycle, `sources`/`help_pages` provenance.
+
+| table | key columns |
+|---|---|
+| `function_categories` (+ `_localizations`) | `key`, help page |
+| `functions` (+ `function_localizations`) | `name` (natural key), `category_key`, `return_type`, `min_args`, `max_args` (NULL = unlimited), `signature`, `originated_in_version_id`, `originated_in_raw`, `deprecated_in`, `removed_in` |
+| `function_parameters` | `function_id`, `position`, `name`, `type`, `optional`, `repeatable`, `group_key` |
+| `function_parameter_constants` | `parameter_id`, `constant_id` |
+| `function_compatibility` | like `step_compatibility` |
+| `function_verifications` | `function_id`, `fm_version_id`, `arg_count`, `is_valid` (observation-based, like section 4) |
+| `get_constants` | `name`, `return_type`, lifecycle, help page |
+| `calc_constants` | `name`, `group_key`, `value` |
+| `calc_operators` | `symbol`, `alternates`, `name`, `kind`, `arity`, `precedence`, `associativity` |
+| `calc_syntax_rules` | `key`, `value` (small key/value table) |
+| `error_codes` | `code`, `label`, lifecycle |
+| link: `step_option_functions` | later: which step options or script instances use which functions (the original 3.12 idea) |
+
+### 10.6 Export: `fm-calc-catalogue/v1` [decided: schema owned by the consumer contract]
+
+`export_calc_catalogue` (DB → `export/fm-calc-catalogue.json`):
+- It validates against FMCuttingBoard's `fm-calc-catalogue.schema.json`. Copy or pin the schema here; whether to
+  fetch it or vendor it is [open].
+- Output is deterministic: functions sorted by name, operators by precedence then symbol.
+- It records `generator.commit` and refuses dirty trees, or marks them `dirty: true`, which FMCuttingBoard rejects.
+- Additive changes stay v1; anything breaking is v2, coordinated with FMCuttingBoard.
+
+### 10.7 Steps
+
+1. **Locate the help pages** (10.4) and extend `scrape_help.py fetch` with the new page kinds. Prototype on a few
+   functions with tricky signatures: `Left`, `Case`, `Let`, `JSONSetElement`, `ExecuteSQL`, `While`, `Get ( AccountName )`.
+2. **Migration 0002** for the tables in 10.5; `scrape_help.py parse` fills functions, parameters, compatibility,
+   Get constants and error codes.
+3. **Signature parser**: turn the syntax line into structured parameters plus `minArgs`/`maxArgs`. Report every
+   function it can't parse confidently (review by hand, as with step options).
+4. **Hand-curated YAML** for operators, syntax rules and named constants, imported into their tables.
+5. **`export_calc_catalogue`** (10.6). First milestone: functions, Get constants and syntax, unverified. That's
+   already enough for FMCuttingBoard to replace its 22-function list.
+6. **Verification in `EverythingBagel.fmp12`** (8.1 rig): generate `IsValidExpression` checks per function, import
+   the results into `function_verifications`, and export them as `verified`.
+7. **Consumers:** FMCuttingBoard runs its sync script; `fmscriptui` gets the export (or the generated `fm-functions.js`).
+
+### 10.7a Status of steps 1-5 [implemented 2026-10-07]
+
+```
+python3 scrape_help.py fetch --scope calc     # functions-reference -> 19 category pages -> 230 function + 138 Get pages,
+                                              # plus named-constants-keywords, error-codes, operators-in-formulas
+python3 scrape_help.py parse --scope calc     # -> functions, parameters, Get constants, named constants, error codes
+python3 calc_catalogue.py report              # what still needs a human (needs PyYAML)
+python3 calc_catalogue.py export              # curate + build + validate -> export/fm-calc-catalogue.json
+```
+
+- **Files:** `migrations/0002_calc_catalogue.sql`, `fm_signature.py` (Format-line parser, stdlib, no DB),
+  `calc_curated.yaml`, `calc_catalogue.py` (`curate` / `report` / `export`), `schemas/fm-calc-catalogue.schema.json`.
+- **Pages found:** the functions reference's own mini-TOC is filled in by JavaScript, so categories come from the
+  navigation tree under the selected "Functions reference" node. Category pages use the same table layout as the
+  step categories. Get functions are the `get-functions` category; each page becomes a `get_constants` row.
+- **Result of the first run:** 230 functions in 19 categories, 138 Get constants, 46 named constants (8 groups:
+  `boolean`, `json-type`, `text-style`, `character-set`, `lookup`, `path-type`, `record-metadata`, `value-type`),
+  293 error codes. The parser read 221 of the 230 signatures; the other 9 (ComputeModel, Evaluate, Extend, Let,
+  LookupNext, TextColor, TextColorRemove, While, WindowNames) are curated in `calc_curated.yaml` with a `reason`.
+  JSONSetElement parses, but its Format line shows only the single-triple form, so it is curated too (min 4, unlimited,
+  `element` group, as in FMCuttingBoard's example). `Get` itself is a curated function entry (no page of its own).
+  The export (231 functions) validates against the schema with both `jsonschema` and FMCuttingBoard's ajv-cli.
+- **Parser rules:** `;` separates arguments, `{ }` marks optional ones, `...` marks repetition, numbered names
+  (`test1`, `test2`) are one repeating parameter only when the signature has `...` (so `Distance`-style `lat1 ; lat2`
+  stay separate), several repeating names share a `group` (`test-result`). `[ ]`, `=`, nested calls, odd names and
+  several Format lines are reported instead of guessed.
+- **Parameter types are inferred** from help's parameter description (first type word in the first sentence; three or
+  more types → `any`) and stored with `type_source = 'inferred'`; `parameterTypes` in the YAML corrects them
+  (`type_source = 'curated'`). About a third are `any`. Good enough for signature help, but not for type diagnostics.
+- **Precedence is cross-checked:** every `curate` compares the YAML's operator precedence with help's
+  "Order of evaluation" list and warns on any disagreement (none today).
+- **Licensing:** purposes, parameter descriptions, constant notes and error texts are stored in the DB but never
+  exported. `summary` and error `label` are exported only when we write them in the YAML, so today the export has
+  no summaries and no `errorCodes`.
+- **Findings:** function pages have no compatibility tables (help: "All functions are compatible on all FileMaker
+  clients; any exceptions are noted in individual topics"), so `compatibility` is absent until someone curates the
+  exceptions from prose. Help says 8 functions originated in **26.0**, so `documentedFileMakerVersion` defaults to
+  `26.0` (override in the YAML). Random's Format line is a `<p>`, not a `<pre>`.
+- **Schema:** vendored from FMCuttingBoard at commit `1a92312` (settles the 10.6 [open] point: vendor, not fetch).
+  Refresh it by copying `shared/schemas/fm-calc-catalogue.schema.json` when the contract changes.
+
+### 10.8 Open questions
+
+- Publish location: a committed `export/` file in this repo, or a release asset? (The same question as the end of section 7.)
+- Should the schema live here, with FMCuttingBoard vendoring it, once this repo has more than one export format?
+- How to represent functions whose argument grammar isn't positional (`Let`'s bindings block, `While`'s
+  initial/condition/logic/result variables)? The schema has a `variableBindings` type; check whether it's enough
+  once `Let` and `While` are parsed. *Update:* curated as `variableBindings` parameters, each counted as one argument
+  (`Let` 2/2, `While` 4/4). JSONSetElement's bracketed form and Evaluate's `[ field ; ... ]` list still don't fit
+  positional counting well; step 6 should test them.
+- Error code labels: we have 293 codes but must write our own short labels (`errorLabels` in the YAML) before any
+  are exported. Write all of them, or only the common ones (0, 1, 100-112, 301, 400-401, 500-509, ...)?
+- Function `summary`: optional; worth writing for the most-used functions, or leave hover to `helpUrl`?
