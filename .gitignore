@@ -1,1 +1,4 @@
 .idea
+catalogue.sqlite
+catalogue.sqlite-journal
+__pycache__/
