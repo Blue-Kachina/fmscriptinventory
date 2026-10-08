@@ -154,10 +154,13 @@ functions:
     parameters:
       - { name: fileName, type: text, optional: true }
 
-  # Parsed without complaint, but help's Format line shows only one of several accepted forms.
+  # Parsed without complaint, but help's Format line shows only one of several accepted forms. Both also take
+  # bracketed groups, and a [ ... ] group counts as ONE argument (FMCuttingBoard's parsers and IsValidExpression
+  # agree), so the minimum is the bracketed form's: JSONSetElement ( j ; [ "k" ; 1 ; JSONNumber ] ) has 2.
+  # Unlimited max, because the bracketed form repeats. Found by FMCuttingBoard's AnnotatorHighlightingTest.
   JSONSetElement:
-    reason: Description allows several key/value/type triples (bracketed); matches FMCuttingBoard's contract example.
-    minArgs: 4
+    reason: Takes json ; key ; value ; type, or json followed by any number of [ key ; value ; type ] groups.
+    minArgs: 2
     maxArgs: null
     parameters:
       - { name: json, type: json }
@@ -165,6 +168,14 @@ functions:
       - { name: value, type: any, repeatable: true, group: element }
       - { name: type, type: number, repeatable: true, group: element,
           allowedConstants: [JSONRaw, JSONString, JSONNumber, JSONObject, JSONArray, JSONBoolean, JSONNull] }
+  Substitute:
+    reason: Takes text ; search ; replace, or text followed by any number of [ search ; replace ] pairs.
+    minArgs: 2
+    maxArgs: null
+    parameters:
+      - { name: text, type: text }
+      - { name: searchString, type: text, repeatable: true, group: pair }
+      - { name: replaceString, type: text, repeatable: true, group: pair }
 
   # Type corrections and constant links (help's Notes column on named-constants-keywords.html).
   Case:

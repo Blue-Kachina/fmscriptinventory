@@ -724,8 +724,11 @@ python3 calc_catalogue.py export              # curate + build + validate -> exp
   `boolean`, `json-type`, `text-style`, `character-set`, `lookup`, `path-type`, `record-metadata`, `value-type`),
   293 error codes. The parser read 221 of the 230 signatures; the other 9 (ComputeModel, Evaluate, Extend, Let,
   LookupNext, TextColor, TextColorRemove, While, WindowNames) are curated in `calc_curated.yaml` with a `reason`.
-  JSONSetElement parses, but its Format line shows only the single-triple form, so it is curated too (min 4, unlimited,
-  `element` group, as in FMCuttingBoard's example). `Get` itself is a curated function entry (no page of its own).
+  JSONSetElement and Substitute parse, but their Format lines show only the plain form; both also take bracketed
+  groups (`[ key ; value ; type ]`, `[ search ; replace ]`), each counted as one argument, so they are curated as
+  min 2, unlimited, with a repeating `element` / `pair` group. (The first export had JSONSetElement at min 4, from
+  FMCuttingBoard's illustrative example; FMCuttingBoard's annotator tests caught that and the Substitute gap.)
+  `Get` itself is a curated function entry (no page of its own).
   The export (231 functions) validates against the schema with both `jsonschema` and FMCuttingBoard's ajv-cli.
 - **Parser rules:** `;` separates arguments, `{ }` marks optional ones, `...` marks repetition, numbered names
   (`test1`, `test2`) are one repeating parameter only when the signature has `...` (so `Distance`-style `lat1 ; lat2`
