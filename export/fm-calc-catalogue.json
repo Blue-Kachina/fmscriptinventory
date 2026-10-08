@@ -1,9 +1,9 @@
 {
   "schemaVersion": "fm-calc-catalogue/v1",
-  "generatedAt": "2026-10-07T23:18:17Z",
+  "generatedAt": "2026-10-08T01:57:06Z",
   "generator": {
     "repo": "Blue-Kachina/fmscriptinventory",
-    "commit": "e17946d6ae6488ba8ced63e215bc2d478148d3ce",
+    "commit": "8f6e1c4322374ae9716349a1aa36afde2bcc0985",
     "dirty": false
   },
   "locale": "en",
@@ -3145,7 +3145,7 @@
           ]
         }
       ],
-      "minArgs": 4,
+      "minArgs": 2,
       "maxArgs": null,
       "signature": "JSONSetElement ( json ; keyOrIndexOrPath ; value ; type )",
       "lifecycle": {
@@ -4893,17 +4893,19 @@
           "name": "searchString",
           "type": "text",
           "optional": false,
-          "repeatable": false
+          "repeatable": true,
+          "group": "pair"
         },
         {
           "name": "replaceString",
           "type": "text",
           "optional": false,
-          "repeatable": false
+          "repeatable": true,
+          "group": "pair"
         }
       ],
-      "minArgs": 3,
-      "maxArgs": 3,
+      "minArgs": 2,
+      "maxArgs": null,
       "signature": "Substitute ( text ; searchString ; replaceString )",
       "lifecycle": {
         "since": "6.0",
