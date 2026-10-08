@@ -1,0 +1,27 @@
+# Hand-curated facts for the script-step catalogue (section 6 of database_structure_brainstorming.md).
+# Applied by `import_sample.py` (on every run). Keys are script_steps.slug (the help URL basename).
+#
+# What belongs here: facts that neither help.claris.com nor the sample exports give in a structured form.
+# Every entry should be checkable against the step's help page or the Script Editor.
+
+# ── kind flags ───────────────────────────────────────────────────────────────
+# controlFlowRole: the step's part in a script's control flow (blocks, branches, exits).
+# container:  the steps after it are indented in the Script Editor (it opens a block).
+# terminator: it is outdented itself (it closes a block). Else If / Else are both: they close the
+#             previous branch and open the next. Exits leave a block without closing it.
+# Open/Commit Transaction pair like If/End If: help says the Script Workspace prevents nesting
+# transactions and that Revert Transaction "jumps to the matching Commit Transaction step".
+# Steps not listed: no role, container false, terminator false.
+kind:
+  if-script-step:     { controlFlowRole: if,                 container: true,  terminator: false }
+  else-if:            { controlFlowRole: else_if,            container: true,  terminator: true  }
+  else:               { controlFlowRole: else,               container: true,  terminator: true  }
+  end-if:             { controlFlowRole: end_if,             container: false, terminator: true  }
+  loop:               { controlFlowRole: loop,               container: true,  terminator: false }
+  exit-loop-if:       { controlFlowRole: exit_loop_if,       container: false, terminator: false }
+  end-loop:           { controlFlowRole: end_loop,           container: false, terminator: true  }
+  open-transaction:   { controlFlowRole: open_transaction,   container: true,  terminator: false }
+  revert-transaction: { controlFlowRole: revert_transaction, container: false, terminator: false }
+  commit-transaction: { controlFlowRole: commit_transaction, container: false, terminator: true  }
+  exit-script:        { controlFlowRole: exit_script,        container: false, terminator: false }
+  halt-script:        { controlFlowRole: halt_script,        container: false, terminator: false }

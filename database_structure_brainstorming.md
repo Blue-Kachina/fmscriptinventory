@@ -13,7 +13,7 @@ Decisions so far (details in section 5):
 - The canonical checked-in form of the DB is a **deterministic SQL dump** (plus `schema.sql` and migrations); the `.sqlite` file is rebuilt from it.
 - An **inventory.json-style export** is generated from the DB for sister repos (section 7); it need not match the old shape.
 - A **calculations catalogue** (functions, Get constants, operators, syntax) is now scheduled (section 10), requested by the sister repo FMCuttingBoard; facts + links only leave this repo.
-- Step identity/aliasing is **deferred**; option ↔ XML-element mapping needs **investigation**.
+- Step identity/aliasing is **deferred**. Option ↔ XML-element mapping was **investigated**: no many-to-many, so the FK stays, with element rows per XML leaf (Q5).
 
 ---
 
@@ -69,7 +69,7 @@ Every representation row ──► *_observations ──► sources ──► fm
 
 ## 3. Proposed tables
 
-### 3.1 `fm_versions` [proposed]
+### 3.1 `fm_versions` [implemented in migration 0001]
 
 Reference table so every versioned thing points at a real release instead of a free-text string.
 
@@ -117,7 +117,7 @@ Categories are a real entity (they have their own help page and a description, a
 
 `script_step_categories (id, slug UNIQUE, position)` and `script_step_category_localizations (category_id, locale, name, description, help_page_id)`. `position` is the order on the help site. The scraper warns if a step is ever listed under two categories (none so far; if it happens, this becomes a join table).
 
-### 3.3 `step_options` [proposed, updated]
+### 3.3 `step_options` [implemented in migration 0003, empty until help parsing + curation]
 
 Conceptual options, as the help page describes them. Language-neutral columns here; `label`/`description` move to `step_option_localizations (step_option_id, locale, label, description)`.
 
@@ -174,7 +174,7 @@ SAXML, clipboard `fmxmlsnippet` and DDR differ a lot structurally, so each gets 
 
 Column sets will start identical (below) and are then free to diverge per format, e.g. SAXML will probably need parent-path/namespace columns that clipboard doesn't. Whether to generate the three DDL blocks from one template in `schema.sql` is an implementation detail for later.
 
-#### `<fmt>_representations` [proposed, updated]
+#### `<fmt>_representations` [clipboard implemented in migration 0003]
 
 | column           | type       | notes                                                                                                                                  |
 |------------------|------------|----------------------------------------------------------------------------------------------------------------------------------------|
@@ -186,7 +186,7 @@ Column sets will start identical (below) and are then free to diverge per format
 
 No `valid_from` / `valid_to` columns any more; version coverage comes from observations.
 
-#### `<fmt>_elements` [proposed]
+#### `<fmt>_elements` [clipboard implemented in migration 0003: per leaf, per repeat]
 
 | column               | type         | notes                                                                                                         |
 |----------------------|--------------|---------------------------------------------------------------------------------------------------------------|
@@ -200,7 +200,7 @@ No `valid_from` / `valid_to` columns any more; version coverage comes from obser
 | `always_present`     | INTEGER      | 0/1; does FM emit it even when it's the default/hidden?                                                       |
 | `position`           | INTEGER      | element order matters in FM XML                                                                               |
 
-If question 5 resolves to many-to-many, the nullable FK is replaced by a `<fmt>_element_options (element_id, step_option_id)` link table; the rest of the table is unaffected, which is why it is safe to proceed before that investigation.
+Question 5 is resolved: the FK stays, and rows are per **leaf** (an attribute or text node, e.g. `NewWndStyles/@Close`), not per top-level element, because one top-level element often carries several options. Add `parent_path` (and possibly `repeat_index` for repeating groups) when writing `schema.sql`.
 
 #### `<fmt>_observations` [decided: observation-based versioning]
 
@@ -209,7 +209,7 @@ If question 5 resolves to many-to-many, the nullable FK is replaced by a `<fmt>_
 | `representation_id` | FK             | PK is (`representation_id`, `source_id`)               |
 | `source_id`         | FK -> `sources` | carries the FM version (and file/date) of the export   |
 
-### 3.8 `ui_representations` [proposed, updated]
+### 3.8 `ui_representations` [implemented in migration 0003]
 
 How the step reads in the Script Editor. Same observation pattern as the XML families, plus locale.
 
@@ -225,7 +225,7 @@ How the step reads in the Script Editor. Same observation pattern as the XML fam
 
 `ui_observations (ui_representation_id, source_id)` mirrors the XML observation tables.
 
-### 3.9 `ui_options` [proposed]
+### 3.9 `ui_options` [implemented in migration 0003, `enum_display` as table `ui_option_value_displays`]
 
 Replaces the per-option part of `display_map.yaml` (which is imported once and then retired).
 
@@ -241,7 +241,7 @@ Replaces the per-option part of `display_map.yaml` (which is imported once and t
 | `true_text`, `false_text` | TEXT         |                                                |
 | `enum_display`            | TEXT (JSON)  | value -> display text, or move to a child table |
 
-### 3.10 `sources` [proposed]
+### 3.10 `sources` [implemented in migration 0003, plus a `notes` column]
 
 Provenance. Every fact that came from somewhere should say where. Observations point at a source, and the source points at the FM version, so **`sources` is what ties a representation to a version**.
 
@@ -279,7 +279,7 @@ Not designed yet, but the schema above should not block it. Hooks that already e
 - Likely shape later: `functions` (+ localizations, + `function_parameters`), with the same observation-based XML/UI representation pattern, and a link table from `step_options` (or from script *instances*) to the functions they use.
 - Calculations embed function names as text in XML, so function representations probably need their own tokenization notes. That is a separate brainstorm.
 
-### 3.13 Step configurations and conditional options [proposed, from the EverythingBagel plan, see section 8]
+### 3.13 Step configurations and conditional options [`step_configurations` in migration 0003; `step_option_conditions` waits for 8.1]
 
 A concrete example from the help pages: **Go to Record/Request/Page**. With `First` selected there are no further options; with `Next` (or `Previous`) the extra option **Exit after last** becomes available. The help page only says this in prose ("Exit after last ... if Next or Previous is selected"), so it is a candidate for the first `step_option_conditions` row: option `exit_after_last` depends on option `record` (the First/Last/Previous/Next/By Calculation choice) being `next` or `previous`, and the sample script needs at least a `First` configuration and a `Next` configuration to prove it from XML and UI.
 
@@ -375,10 +375,28 @@ Status key: **[decided]**, **[deferred]**, **[investigate]**. Original answers a
 
    Plan impact: human-readable text moved out of `script_steps` and `step_options` into `*_localizations` tables keyed by (`id`, `locale`). `ui_representations` and `help_pages` carry `locale`; examples need a locale column too (3.4, added). Only `en` rows exist initially.
 
-5. **Option modelling.** [investigate]
+5. **Option modelling.** [decided by investigation 2026-10-07: FK stays, elements stored per leaf]
    > I'm unsure, we will need to investigate this further.
 
-   Plan impact: keep the nullable `step_option_id` FK in `*_elements` and `ui_options` as a provisional link. Suggested investigation, using data we already have: for all 207 steps in `script.xml`, count how many XML elements/attributes correspond to each displayed option in `display_map.yaml`. Any option with >1 element, or element with >1 option, is evidence for many-to-many. If everything is 1:1 or 1:N in one direction, the FK stays (on the right side). See next steps.
+   Original plan: keep the nullable `step_option_id` FK in `*_elements` and `ui_options` as a provisional link, and count how many XML elements/attributes correspond to each displayed option in `display_map.yaml`. Any option with >1 element, or element with >1 option, is evidence for many-to-many.
+
+   **Investigation:** `investigate_options.py` (run: `uv run --no-project --with pyyaml --with pdfplumber investigate_options.py [--summary]`) compares `script.xml`, `display_map.yaml` and the PDF printout (204 of 207 steps matched; the 3 misses are comments). Caveat: `analyze.py` generated `display_map.yaml` with one option per *top-level* XML child, so at that level the mapping is 1:1 by construction. The evidence comes from the leaves (attributes, text, nested elements) and from the UI segments (the `;`-separated parts inside `[ ... ]`).
+
+   | finding | count | examples |
+   |---|---|---|
+   | XML element carrying >1 `display_map` option | 0 | (by construction) |
+   | `display_map` option whose element holds >1 logical value (id+name+table of a reference counted as one) | 31 of 324 | `NewWndStyles` (9 attrs), `PDFOptions` (14), `ImportOptions`, `FindReplaceOperation`, every AI step's wrapper element (`SetLLMAccout`, `LLMRequestWithTools`, ...), repeating `TargetFields`/`ExportEntries` |
+   | `display_map` option shown as several labelled UI segments | 15 | `New Window` → `Style:`, `Close:`, `Minimize:`, ... from one `NewWndStyles`; `Configure AI Account` → `Account Name:`, `API key:` from one `SetLLMAccout`; `Insert from Device` → `Camera:`, `Resolution:` |
+   | one UI segment fed by several XML elements | 2 real | `Source: "$file"` = `DataSourceType` + `UniversalPathList` (Convert File, Import Records). The other 5 hits were identical values (`Perform Script on Server with Callback` uses the same script and parameter twice) |
+   | UI segments no option could be attributed to | 82 | mostly enum display text that differs from the XML value (`Current Window`, `Create folders:Yes`, `100%`) because `display_map.yaml`'s `allowedValues` lists only the one value seen. These are mapping gaps, not cardinality evidence |
+
+   **Conclusion:** no evidence of many-to-many. The real pattern is **one conceptual option → several XML leaves** (1:N), and `display_map.yaml`'s grain (one option per top-level element) is too coarse: what the UI and help call separate options (`Close`, `Minimize`, `Account Name`, `API key`) often live as attributes or children *inside* one element. The one UI segment that combines two elements (`Source:` = type + path) is a single option in help terms ("Specify data source"), so it is still one option → several leaves.
+
+   Plan impact:
+   - **Keep the nullable `step_option_id` FK** on `*_elements` and `ui_options`; no link table.
+   - **`*_elements` rows are per leaf**, not per top-level element: `xml_path` names the attribute or text node (`NewWndStyles/@Close`, `SetLLMAccout/AccessAPIKey/Calculation/text()`), plus a `parent_path` (or the path prefix) so element grouping is not lost. Repeating groups (`TargetFields/Field`, `ExportEntries/ExportEntry`) get a `repeat_index`, or a single row marked repeatable; decide in `schema.sql`.
+   - **`display_map.yaml` cannot be imported as `step_options` 1:1.** The importer (step 5) creates leaf element rows from the XML and seeds `ui_options` from the printed segments; options are grouped from help (`ref-options` sections) plus curation, as already planned for the scraper's "not done yet" item 1. `display_map`'s labels and true/false texts are still worth importing as `ui_options` data.
+   - Revisit if a leaf is ever found that belongs to two options (the script reports it).
 
 6. **Calculations and functions.** [decided: in scope later]
    > Yes, I had already started thinking about this also
@@ -424,10 +442,17 @@ Status key: **[decided]**, **[deferred]**, **[investigate]**. Original answers a
 
 1. ~~Decide the two remaining flags~~ Done: SQL dump (Q9); inventory-style JSON export (Q10).
 2. ~~Find out what the sister repos read from `inventory.json`~~ Done for `fmscriptui` (section 7, "Consumers"): it was a one-time seed, not a live dependency. Still to confirm whether other sister repos exist.
-3. **Option-mapping investigation** (Q5): script over `script.xml` + `display_map.yaml` that reports option-to-element cardinality. Settles FK vs. link-table before `schema.sql` is written.
-4. **Write `schema.sql`** (plus migration 0001) from the sections above: reference tables (`fm_versions`, `sources`), `script_steps` + localizations, `step_*`, the clipboard XML family, `ui_*`, `help_pages`. Create the SAXML and DDR families later (their columns are guesses today).
-5. **One-shot importer** from `inventory.json` + `display_map.yaml` + PDF-matched text into the clipboard XML family and `ui_*` tables, recording one `sources` row for the export and its FM version. `inventory.json` has `sourceVersion: null`, so we need to determine the FM version of `script.xml` / `EverythingBagel.fmp12` first.
-6. **Dump tooling:** `build` / `dump` commands and the determinism rules from Q9; commit the first dump.
+3. ~~**Option-mapping investigation** (Q5)~~ Done 2026-10-07 (`investigate_options.py`): FK stays, `*_elements` rows are per XML leaf, and `display_map.yaml` is too coarse to become `step_options` directly. Details in Q5.
+4. ~~**Write `schema.sql`**~~ Done 2026-10-07: `migrations/0003_representations.sql` adds `sources`, `step_options` (+ localizations, values), `step_configurations`, the clipboard XML family, `ui_representations`, `ui_options`, `ui_option_value_displays`, `ui_observations`, the `current_*` views, and the `inventory.json` kind flags on `script_steps`. `schema.sql` is **generated** from all migrations (`catalogue_db.py schema`, `--check` to verify) and never edited by hand. Decisions made while writing it: `*_elements` and `ui_options` have one row per leaf/segment **and per repeat** (`repeat_index`; `xml_path` stays index-free); uniqueness with a nullable `configuration_id` uses an `IFNULL(configuration_id, 0)` unique index; at most one baseline configuration per step (partial unique index); `step_option_conditions` is not created yet (3.13 says to wait for the 8.1 rig). SAXML and DDR families come later (their columns are guesses today).
+5. ~~**One-shot importer**~~ Done 2026-10-07: `import_sample.py` (`uv run --no-project --with pyyaml --with pdfplumber import_sample.py [--dry-run]`). `script.xml` and `script.pdf` were made with **FileMaker Pro 22** (per you; the patch level wasn't recorded), so both `sources` rows point at `22.0`. The PDF's own timestamp (2026-06-30 10:22:34) is the printout's `captured_at`. Re-running replaces everything the importer owns in one transaction; help-scraped data is untouched. Result:
+   - **`fm_step_id` filled for all 204 distinct XML steps.** Three help names carry a platform suffix the XML lacks (`Perform AppleScript (macOS)`, `Send DDE Execute (Windows)`, `Speak (macOS)`), matched by ignoring the suffix.
+   - **207 `step_configurations`** (one per instance; the first instance of a step is its `baseline`, the other `# (comment)`s are `instance-N`), 207 clipboard representations with **479 leaf elements** (Import Records' `TargetFields/Field/@map` is repeats 0-7), 204 UI representations with 434 `ui_options` (one per printed segment, plus `display_map` options the line doesn't show), and 47 value displays.
+   - **321 provisional `step_options` with `origin = 'display_map'`** (migration 0004 adds `origin`). Q5 showed the `display_map` grain is too coarse, but importing it keeps the option ↔ XML ↔ UI links that would otherwise be lost when the YAML retires. All 479 leaves and 346 of the 434 `ui_options` link to an option. Curation later splits the 31 composite ones (e.g. `newWndStyles` → `close`, `minimize`, ...) and replaces or merges them with help-derived options.
+   - **Segment attribution, label wins:** when exactly one option matches a segment by label, it beats value matches (`Flow: <unknown>` is `flow` although `text` also holds `<unknown>`). That linked `Flow:`, `Callback script:` and both `Source:` segments; `Source:` goes to `dataSourceType` until curation merges it with `universalPathList` into one data-source option (help: "Specify data source").
+   - **Not linked (left NULL for review):** 3 printed segments of Perform Script on Server with Callback (the unlabelled script name and both `Parameter:` segments), because the sample uses the same script and an empty parameter for both script and callback. They are fixed by distinct values in the variations script (8.1), not by hand links. Plus the 82 segments Q5 couldn't attribute.
+   - **Gaps the importer reports:** 3 of the 4 `# (comment)` steps aren't in the printout (empty comments print as blank lines); `display_template` and `ui_representations.display_name` are left NULL until options are curated. **The `inventory.json` kind flags were empty for every step** (`controlFlowRole` null, the booleans false), so they are now curated in `step_curated.yaml` (`kind`, applied by the importer): 12 steps (If/Else If/Else/End If, Loop/Exit Loop If/End Loop, Open/Revert/Commit Transaction, Exit Script, Halt Script). Definitions: *container* = the steps after it are indented in the Script Editor; *terminator* = it is outdented itself (Else If and Else are both).
+   - **12 help steps are missing from the sample** (input for 8.1): `append-pdf`, `cancel-pdf`, `close-pdf`, `create-pdf`, `open-pdf`, `print-pdf`, `configure-persistent-data`, `enable-account`, `enable-touch-keyboard`, `flush-web-viewer-cookies`, `insert-image-caption`, `insert-image-captions-in-found-set`. Help says the 10 other than `enable-account` (7.0) and `enable-touch-keyboard` (14.0) originated in **26.0**, so a FileMaker 22 sample cannot contain them; they arrive with a 26 export. Only those two are genuinely missing from the rig.
+6. ~~**Dump tooling**~~ Done 2026-10-07 in `catalogue_db.py`: `dump` (DB → `catalogue/`), `build` (`catalogue/` → DB), and `dump --check` / `build --check` (the round trip must give back `catalogue/` byte for byte; both pass). Layout: **one file per table** (`catalogue/<table>.sql`, one INSERT per row with a column list, ordered by primary key), except `help_pages`, which is **one file per fetched page** (`catalogue/help_pages/0123-commit-transaction.sql`): it is 38 MB of the 40 MB and append-only, so one file would pass GitHub's 50 MB warning after a refresh or two, while per page a refresh just adds files. `schema_migrations` is not dumped; `catalogue/_migrations.txt` lists the migrations the data was dumped under, and `build` applies exactly those, loads the data, then applies any newer migrations (then `dump` again). `build` writes through SQLite's backup API rather than renaming files, so it works while PHPStorm has the DB open, and keeps the previous DB as `catalogue.sqlite.bak`. `.gitattributes` marks `catalogue/**` as `-text`, because `core.autocrlf=true` would otherwise turn LF into CRLF inside the stored HTML on checkout. The first dump is 660 files (~42 MB) and still needs committing. A pre-commit `dump --check` (Q9) is optional and not installed.
 7. **Export script** (`export_inventory`): DB -> `inventory.json` (section 7). Diff its output against the current `output/inventory.json` as the acceptance test for the importer, since the two should agree on everything the old file carried.
 8. **Help scraper** (separate script): fetch step pages into `help_pages`, then parse into `script_step_localizations`, `step_options`, `step_examples`, `step_compatibility`. Prototype on 3-4 steps first (Commit Transaction, Go to Layout, Set Variable, Perform Script).
 9. **Then retire** `display_map.yaml` and `analyze.py`.
@@ -517,16 +542,18 @@ Items below were raised after the plan above was drafted. Each is a project in i
 Goal: the sample file is the **experiment rig** that produces all the observation data. If it is incomplete, the catalogue is incomplete, so keeping it good is what makes the whole system maintainable.
 
 What's planned:
-- You will open the file (and this repo) from **Windows** instead of WSL2, and likely install **ProofKit** into the file. We then work together, interactively, to make the script contain everything needed.
+- The repo is now checked out on **Windows** (`D:\Dev\FMDev\fmscriptinventory`, moved from WSL2 so PHPStorm's SQLite drivers work), and you will likely install **ProofKit** into the file. We then work together, interactively, to make the script contain everything needed.
 - Each step exists once today (207 steps in `OneOfEverything`). We extend it with **multiple configurations per step** (section 3.13), because some steps reveal options only when another option is set a certain way. Walking through the variations reveals what the UI exposes and what XML it emits.
 - Output of the exercise: a richer sample script (or several), plus a record of each configuration in `step_configurations` and any discovered `step_option_conditions`.
+- **Add the 12 steps missing from the sample** (found by the importer, section 6 step 5) while building the variations script, not as a separate pass: `enable-account` and `enable-touch-keyboard` (available in FileMaker 22, just missing), and the 10 that originated in **26.0** (`append-pdf`, `cancel-pdf`, `close-pdf`, `create-pdf`, `open-pdf`, `print-pdf`, `configure-persistent-data`, `insert-image-caption`, `insert-image-captions-in-found-set`, `flush-web-viewer-cookies`), which need FileMaker 26. That makes the variations script a FileMaker 26 export, so it becomes the second observed version (22.0 → 26.0) and the trigger for revisiting step identity (Q3). Keep the 22 export as-is so the observations show what changed.
+- **Use distinct values in every configuration** so each printed segment can be traced back to its XML. The 22 sample reuses values: Perform Script on Server with Callback has the same script and an empty parameter for both the script and the callback, and Trigger Claris Connect Flow prints `<unknown>` for two different fields. That left segments the importer could not attribute.
 
 Things to work out:
 - **Script organization in the file:** one big script with variants appended, one script per step (`Step: Go to Layout` containing its configurations), or one script per configuration? Per-step scripts keep the clipboard export small and make the mapping step -> configurations obvious. A naming convention like `<StepName> :: <config-key>` would let the importer parse configuration keys from the script/step comments.
 - **Self-describing configurations:** put a `# (comment)` step before each configuration with a machine-readable header (config key, intent), so the importer needs no side file. (Careful: comments themselves are steps and are sometimes empty or absent in PDF printouts; the PDF-matching quirks recorded in `analyze.py` still apply.)
 - **Coverage tracking:** a view/report of steps and options with **zero** configurations exercising them, and options that have never been seen both on and off. This turns "is the rig complete?" into a query.
 - **Exporting from the rig:** today we use clipboard XML plus a PDF printout. SAXML (`Save a Copy as XML`) can be generated from the file directly and likely replaces the manual clipboard step; DDR is the other option. The Script Editor UI text still needs a printout/screenshot/other capture. Possibly ProofKit gives a programmatic route; to investigate when we have it installed.
-- **Windows/WSL2 workflow:** the repo is currently under WSL (`~/webdev`), and Windows will see it via `\\wsl.localhost\Ubuntu\...`. Concerns to settle: FileMaker working from a UNC path vs. a local copy, line endings (CRLF vs LF in checked-in XML and dumps; add `.gitattributes`), and whether to keep a single clone or two. Also, `.fmp12` is a binary file, so history diffs are meaningless; the meaningful artifacts are the XML exports we commit alongside it.
+- **Windows workflow:** settled by moving the checkout to Windows (no UNC paths). Windows has no system Python, so scripts run through `uv` (`uv run --no-project --with pyyaml ... script.py`). Line endings: the dump is protected by `.gitattributes` (`catalogue/** -text`); checked-in XML exports should get the same treatment when the rig's exports are committed. Also, `.fmp12` is a binary file, so history diffs are meaningless; the meaningful artifacts are the XML exports we commit alongside it.
 - **FileMaker version tracking:** every export must record the exact FM version that made it (see `sources.fm_version_id`). Re-exporting from a newer FileMaker is the trigger for new observations, so the process should be a repeatable checklist.
 
 ### 8.2 Turn the Claude Code skills into maintained, self-updating repos
@@ -550,7 +577,7 @@ Open questions: Which skills are we talking about (the `filemaker-dev` one, plus
 
 1. Finish the schema work in section 6 up to the one-shot importer (needs nothing new).
 1a. **Section 10 calculations catalogue, steps 1-5** (scraper extension, migration 0002, signature parser, curated YAML, unverified export). Moved up from last place: it has two waiting consumers (FMCuttingBoard, `fmscriptui`) and reuses the scraper. Its step 6 (verification) waits for the 8.1 rig.
-2. 8.1 EverythingBagel refinement, **in parallel** with the help scraper. It is the long pole, and it needs your hands (Windows + FileMaker), so start it early. The first useful milestone is small: pick 3-4 steps with obviously conditional options and work out the configuration scheme on those before touching all 207.
+2. 8.1 EverythingBagel refinement (including the 12 missing steps, which need FileMaker 26 for ten of them), **in parallel** with the help scraper. It is the long pole, and it needs your hands (Windows + FileMaker), so start it early. The first useful milestone is small: pick 3-4 steps with obviously conditional options and work out the configuration scheme on those before touching all 207.
 3. Query CLI (also needed by 8.2).
 4. 8.2 skills-as-repos, once the export and CLI exist.
 5. ~~Functions catalogue (3.12)~~ Moved up to 1a (section 10); it also feeds the skills.
@@ -559,7 +586,7 @@ Open questions: Which skills are we talking about (the `filemaker-dev` one, plus
 
 ## 9. Scraper: status and findings
 
-First version is in the repo: `scrape_help.py` (stdlib only) plus `migrations/0001_help_catalogue.sql`. `catalogue.sqlite` is git-ignored (the dump workflow from Q9 is not built yet).
+First version is in the repo: `scrape_help.py` (stdlib only) plus `migrations/0001_help_catalogue.sql`. `catalogue.sqlite` is git-ignored; its committed form is the `catalogue/` dump (`catalogue_db.py dump` / `build`, section 6 step 6).
 
 ```
 python3 scrape_help.py fetch    # crawl reference page -> 14 category pages -> step pages, store raw HTML in help_pages

@@ -2,3 +2,5 @@
 catalogue.sqlite
 catalogue.sqlite-journal
 __pycache__/
+catalogue.sqlite.bak
+catalogue.sqlite.tmp

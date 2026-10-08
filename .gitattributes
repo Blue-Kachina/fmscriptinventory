@@ -1,0 +1,4 @@
+# The catalogue dump stores text verbatim (raw help HTML, multi-line help sections). Line-ending
+# conversion (core.autocrlf) would change that text, and `catalogue_db.py build` would then load
+# different data than was dumped. Keep these bytes exactly as written.
+catalogue/** -text
